@@ -29,3 +29,81 @@ export const GET_POST_BY_ID = gql`
     }
   }
 `;
+
+export const GET_ALL_PROJECTS = gql`
+  query GetAllProjects {
+    projectCollection {
+      items {
+        sys {
+          id
+        }
+        title
+        slug
+        category
+        region
+        client
+        year
+        featured
+        coverImage {
+          url
+          title
+          width
+          height
+        }
+      }
+    }
+  }
+`;
+
+export const GET_FEATURED_PROJECTS = gql`
+  query GetFeaturedProjects {
+    projectCollection(where: { featured: true }, limit: 3) {
+      items {
+        sys {
+          id
+        }
+        title
+        slug
+        category
+        region
+        client
+        year
+        coverImage {
+          url
+          title
+          width
+          height
+        }
+      }
+    }
+  }
+`;
+
+export const GET_PROJECT_BY_SLUG = gql`
+  query GetProjectBySlug($slug: String!) {
+    projectCollection(where: { slug: $slug }, limit: 1) {
+      items {
+        sys {
+          id
+        }
+        title
+        slug
+        category
+        region
+        client
+        year
+        description
+        budget
+        duration
+        specs
+        featured
+        coverImage {
+          url
+          title
+          width
+          height
+        }
+      }
+    }
+  }
+`;

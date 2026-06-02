@@ -1,23 +1,53 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { projects } from '@/lib/projects';
+import { contentfulClient } from '@/lib/contentful';
+import { GET_ALL_PROJECTS, GET_PROJECT_BY_SLUG } from '@/lib/queries';
+
+const CATEGORY_BG = {
+  Distribution: 'linear-gradient(135deg, #0a1628, #0d2040)',
+  'Éclairage': 'linear-gradient(135deg, #003d7a, #005fa3)',
+  Solaire: 'linear-gradient(135deg, #005fa3, #0079cc)',
+  VRD: 'linear-gradient(135deg, #0a1628, #0f1e35)',
+};
+const DEFAULT_BG = 'linear-gradient(135deg, #0a1628, #162540)';
 
 export async function generateStaticParams() {
-  return projects.map((p) => ({ slug: String(p.id) }));
+  const data = await contentfulClient.request(GET_ALL_PROJECTS);
+  return data.projectCollection.items.map((item) => ({ slug: item.slug }));
 }
 
 export default async function ProjectDetailPage({ params }) {
   const { slug } = await params;
-  const project = projects.find((p) => String(p.id) === slug);
+  const data = await contentfulClient.request(GET_PROJECT_BY_SLUG, { slug });
+  const raw = data.projectCollection.items[0];
 
-  if (!project) notFound();
+  if (!raw) notFound();
 
-  const specs = [
+  const project = {
+    title: raw.title,
+    slug: raw.slug,
+    category: raw.category,
+    region: raw.region,
+    client: raw.client,
+    year: raw.year,
+    description: raw.description ?? null,
+    budget: raw.budget ?? null,
+    duration: raw.duration ?? null,
+    specs: raw.specs ?? null,
+    featured: raw.featured ?? false,
+    coverImage: raw.coverImage ?? null,
+  };
+
+  const heroBg = project.coverImage
+    ? `url(${project.coverImage.url}) center/cover no-repeat`
+    : (CATEGORY_BG[project.category] ?? DEFAULT_BG);
+
+  const specItems = [
     { label: "Maître d'Ouvrage", val: project.client },
     { label: 'Région', val: project.region },
     { label: 'Année', val: project.year },
-    { label: 'Budget', val: project.budget },
-    { label: 'Durée', val: project.duration },
+    ...(project.budget ? [{ label: 'Budget', val: project.budget }] : []),
+    ...(project.duration ? [{ label: 'Durée', val: project.duration }] : []),
     { label: 'Catégorie', val: project.category },
   ];
 
@@ -25,7 +55,7 @@ export default async function ProjectDetailPage({ params }) {
     <>
       <style>{`
         .detail-hero {
-          min-height: 340px;
+          min-height: 380px;
           display: flex;
           flex-direction: column;
           justify-content: flex-end;
@@ -37,7 +67,8 @@ export default async function ProjectDetailPage({ params }) {
           content: '';
           position: absolute;
           inset: 0;
-          background: linear-gradient(to top, rgba(10,22,40,0.72) 0%, rgba(10,22,40,0.25) 60%, transparent 100%);
+          background: linear-gradient(to top, rgba(10,22,40,0.78) 0%, rgba(10,22,40,0.3) 55%, transparent 100%);
+          z-index: 0;
         }
         .detail-hero-inner {
           position: relative;
@@ -83,16 +114,25 @@ export default async function ProjectDetailPage({ params }) {
           max-width: 700px;
         }
 
-        /* MAIN CONTENT */
+        /* CONTENT LAYOUT */
         .detail-layout {
           display: grid;
-          grid-template-columns: 1fr 340px;
+          grid-template-columns: 1fr 320px;
           gap: 3.5rem;
           align-items: start;
         }
+        .detail-section-title {
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 1.5rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          color: #0a1628;
+          margin: 0.5rem 0 1.25rem;
+          letter-spacing: 0.02em;
+        }
         .detail-desc {
-          font-size: 1.05rem;
-          color: rgba(10,22,40,0.7);
+          font-size: 1rem;
+          color: rgba(10,22,40,0.68);
           line-height: 1.8;
           margin-bottom: 2.5rem;
         }
@@ -120,12 +160,17 @@ export default async function ProjectDetailPage({ params }) {
           font-weight: 700;
           color: #0a1628;
         }
+        .detail-extra {
+          margin-top: 2rem;
+          padding-top: 2rem;
+          border-top: 1px solid rgba(10,22,40,0.07);
+          font-size: 0.9rem;
+          color: rgba(10,22,40,0.6);
+          line-height: 1.75;
+        }
 
         /* SIDEBAR */
-        .detail-sidebar {
-          position: sticky;
-          top: 100px;
-        }
+        .detail-sidebar { position: sticky; top: 100px; }
         .detail-sidebar-card {
           background: #0a1628;
           border-radius: 8px;
@@ -158,7 +203,7 @@ export default async function ProjectDetailPage({ params }) {
       `}</style>
 
       {/* ── HERO ── */}
-      <section className="detail-hero" style={{ background: project.bg }}>
+      <section className="detail-hero" style={{ background: heroBg }}>
         <div className="detail-hero-inner">
           <Link href="/realisations" className="detail-back">
             ← Retour aux Réalisations
@@ -172,34 +217,47 @@ export default async function ProjectDetailPage({ params }) {
       <section className="section">
         <div className="container">
           <div className="detail-layout">
-            {/* Left: description + specs */}
+            {/* Main column */}
             <div>
               <span className="overline">{project.region} · {project.year}</span>
-              <h2 style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: '1.6rem', fontWeight: 700, textTransform: 'uppercase', color: '#0a1628', margin: '0.5rem 0 1.5rem', letterSpacing: '0.02em' }}>
-                À propos du projet
-              </h2>
-              <p className="detail-desc">{project.desc}</p>
-              <div className="section-header" style={{ marginBottom: '1.25rem', textAlign: 'left' }}>
-                <span className="overline">Fiche Technique</span>
-              </div>
-              <div className="detail-specs-grid">
-                {specs.map((s) => (
+
+              {project.description && (
+                <>
+                  <h2 className="detail-section-title">À propos du projet</h2>
+                  <p className="detail-desc">{project.description}</p>
+                </>
+              )}
+
+              <span className="overline">Fiche Technique</span>
+              <div className="detail-specs-grid" style={{ marginTop: '0.75rem' }}>
+                {specItems.map((s) => (
                   <div className="detail-spec" key={s.label}>
                     <div className="detail-spec-label">{s.label}</div>
                     <div className="detail-spec-val">{s.val}</div>
                   </div>
                 ))}
               </div>
+
+              {project.specs && (
+                <div className="detail-extra">
+                  <span className="overline">Informations Complémentaires</span>
+                  <p style={{ marginTop: '0.75rem' }}>{project.specs}</p>
+                </div>
+              )}
             </div>
 
-            {/* Right: sidebar CTA */}
+            {/* Sidebar */}
             <div className="detail-sidebar">
               <div className="detail-sidebar-card">
                 <div className="detail-sidebar-title">Projet similaire ?</div>
                 <p className="detail-sidebar-body">
                   Vous avez un projet d&apos;infrastructure électrique ou énergétique ? Notre bureau d&apos;études vous répond sous 48h.
                 </p>
-                <Link href="/contact" className="btn btn-primary" style={{ width: '100%', textAlign: 'center', display: 'block' }}>
+                <Link
+                  href="/contact"
+                  className="btn btn-primary"
+                  style={{ width: '100%', textAlign: 'center', display: 'block' }}
+                >
                   Nous Contacter
                 </Link>
               </div>
