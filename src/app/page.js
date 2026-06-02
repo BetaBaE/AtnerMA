@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { contentfulClient } from '@/lib/contentful';
+import { GET_FEATURED_PROJECTS } from '@/lib/queries';
 
 // TODO: replace with Contentful data
 const activities = [
@@ -28,35 +30,12 @@ const activities = [
   },
 ];
 
-const recentProjects = [
-  {
-    id: 1,
-    title: 'Extension Réseau HTA/BT — Settat',
-    region: 'Province de Settat',
-    client: 'ONEE — Direction Régionale',
-    category: 'Distribution',
-    year: '2023',
-    bg: 'linear-gradient(135deg, #0a1628, #0d2040)',
-  },
-  {
-    id: 2,
-    title: 'Éclairage Public Urbain — Bouskoura',
-    region: 'Grand Casablanca-Settat',
-    client: 'Commune Urbaine de Bouskoura',
-    category: 'Éclairage',
-    year: '2023',
-    bg: 'linear-gradient(135deg, #003d7a, #00569e)',
-  },
-  {
-    id: 3,
-    title: 'Centrale PV 500 kWp — Laâyoune',
-    region: 'Région Laâyoune-Sakia el Hamra',
-    client: 'MASEN',
-    category: 'Solaire',
-    year: '2022',
-    bg: 'linear-gradient(135deg, #005fa3, #0079cc)',
-  },
-];
+const CATEGORY_BG = {
+  Distribution: 'linear-gradient(135deg, #0a1628, #0d2040)',
+  'Éclairage': 'linear-gradient(135deg, #003d7a, #005fa3)',
+  Solaire: 'linear-gradient(135deg, #005fa3, #0079cc)',
+  VRD: 'linear-gradient(135deg, #0a1628, #0f1e35)',
+};
 
 const clients = [
   { name: 'ONEE', full: "Office National de l'Électricité et de l'Eau Potable" },
@@ -83,7 +62,20 @@ const ActivityIcon = ({ id }) => {
   );
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const data = await contentfulClient.request(GET_FEATURED_PROJECTS);
+  const recentProjects = data.projectCollection.items.map((item) => ({
+    slug: item.slug,
+    title: item.title,
+    category: item.category,
+    region: item.region,
+    client: item.client,
+    year: item.year,
+    thumbBg: item.coverImage
+      ? `url(${item.coverImage.url}) center/cover no-repeat`
+      : (CATEGORY_BG[item.category] ?? 'linear-gradient(135deg, #0a1628, #162540)'),
+  }));
+
   return (
     <>
       <style>{`
@@ -418,7 +410,7 @@ export default function HomePage() {
         <div className="stats-inner">
           {[
             { val: '+500', lbl: 'Projets Livrés' },
-            { val: '20+', lbl: "Années d'Expérience" },
+            { val: '38+', lbl: "Années d'Expérience" },
             { val: '12', lbl: 'Régions Couvertes' },
             { val: '100%', lbl: 'Marchés Publics' },
           ].map((s) => (
@@ -466,8 +458,8 @@ export default function HomePage() {
           </div>
           <div className="proj-grid">
             {recentProjects.map((p) => (
-              <Link href="/realisations" key={p.id} className="proj-card">
-                <div className="proj-thumb" style={{ background: p.bg }}>
+              <Link href={`/realisations/${p.slug}`} key={p.slug} className="proj-card">
+                <div className="proj-thumb" style={{ background: p.thumbBg }}>
                   <span className="proj-badge">{p.category}</span>
                 </div>
                 <div className="proj-body">

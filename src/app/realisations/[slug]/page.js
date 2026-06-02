@@ -207,9 +207,9 @@ export default async function ProjectDetailPage({ params }) {
         <div className="detail-hero-inner">
           <Link href="/realisations" className="detail-back">
             ← Retour aux Réalisations
-          </Link>
-          <div className="detail-badge">{project.category}</div>
+          </Link> 
           <h1 className="detail-title">{project.title}</h1>
+          <div className="detail-badge">{project.category}</div>
         </div>
       </section>
 
@@ -238,12 +238,26 @@ export default async function ProjectDetailPage({ params }) {
                 ))}
               </div>
 
-              {project.specs && (
-                <div className="detail-extra">
-                  <span className="overline">Informations Complémentaires</span>
-                  <p style={{ marginTop: '0.75rem' }}>{project.specs}</p>
-                </div>
-              )}
+              {project.specs && (() => {
+              try {
+                const parsed = JSON.parse(project.specs);
+                return (
+                  <div className="detail-extra">
+                    <span className="overline">Informations Complémentaires</span>
+                    <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {Object.entries(parsed).map(([key, value]) => (
+                        <div key={key} style={{ display: 'flex', gap: '0.75rem' }}>
+                          <span style={{ color: 'var(--text-muted)', minWidth: '160px', fontSize: '0.82rem' }}>{key}</span>
+                          <strong style={{ fontSize: '0.82rem' }}>{value}</strong>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              } catch {
+                return null;
+              }
+            })()}
             </div>
 
             {/* Sidebar */}
