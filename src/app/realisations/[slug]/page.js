@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { contentfulClient } from '@/lib/contentful';
 import { GET_ALL_PROJECTS, GET_PROJECT_BY_SLUG } from '@/lib/queries';
 
@@ -33,7 +34,7 @@ export default async function ProjectDetailPage({ params }) {
     description: raw.description ?? null,
     budget: raw.budget ?? null,
     duration: raw.duration ?? null,
-    specs: raw.specs ?? null,
+    specs: raw.specs?.json ?? null,
     featured: raw.featured ?? false,
     coverImage: raw.coverImage ?? null,
   };
@@ -238,26 +239,11 @@ export default async function ProjectDetailPage({ params }) {
                 ))}
               </div>
 
-              {project.specs && (() => {
-              try {
-                const parsed = JSON.parse(project.specs);
-                return (
-                  <div className="detail-extra">
-                    <span className="overline">Informations Complémentaires</span>
-                    <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      {Object.entries(parsed).map(([key, value]) => (
-                        <div key={key} style={{ display: 'flex', gap: '0.75rem' }}>
-                          <span style={{ color: 'var(--text-muted)', minWidth: '160px', fontSize: '0.82rem' }}>{key}</span>
-                          <strong style={{ fontSize: '0.82rem' }}>{value}</strong>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              } catch {
-                return null;
-              }
-            })()}
+              {project.specs && (
+                <div className="detail-extra">
+                  {documentToReactComponents(project.specs)}
+                </div>
+              )}
             </div>
 
             {/* Sidebar */}

@@ -79,6 +79,30 @@ export const GET_FEATURED_PROJECTS = gql`
   }
 `;
 
+export const GET_ALL_ACTIVITIES = gql`
+  query GetAllActivities {
+    activityCollection(order: order_ASC) {
+      items {
+        sys {
+          id
+        }
+        title
+        slug
+        category
+        shortDescription
+        icon
+        order
+        coverImage {
+          url
+          title
+          width
+          height
+        }
+      }
+    }
+  }
+`;
+
 export const GET_PROJECT_BY_SLUG = gql`
   query GetProjectBySlug($slug: String!) {
     projectCollection(where: { slug: $slug }, limit: 1) {
@@ -95,7 +119,7 @@ export const GET_PROJECT_BY_SLUG = gql`
         description
         budget
         duration
-        specs
+        specs { json }
         featured
         coverImage {
           url
@@ -103,6 +127,42 @@ export const GET_PROJECT_BY_SLUG = gql`
           width
           height
         }
+      }
+    }
+  }
+`;
+
+export const GET_ALL_TEAM_MEMBERS = gql`
+  query GetAllTeamMembers {
+    teamMemberCollection(order: order_ASC) {
+      items {
+        sys { id }
+        name
+        role
+        department
+        bio
+        order
+        photo {
+          url
+          title
+          width
+          height
+        }
+      }
+    }
+  }
+`;
+
+export const GET_SITE_CONFIG = gql`
+  query GetSiteConfig {
+    siteConfigCollection(limit: 1) {
+      items {
+        heroTitle
+        heroSubtitle
+        projectsCount
+        yearsCount
+        regionsCount
+        heroCtaLabel
       }
     }
   }

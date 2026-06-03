@@ -1,34 +1,9 @@
 import Link from 'next/link';
-import { contentfulClient } from '@/lib/contentful';
-import { GET_FEATURED_PROJECTS } from '@/lib/queries';
-
-// TODO: replace with Contentful data
-const activities = [
-  {
-    id: 'distribution',
-    title: 'Distribution HTA / HTB / BT',
-    desc: 'Lignes aériennes et souterraines, câblage MT/BT pour les réseaux de distribution électrique nationaux.',
-    href: '/activites#distribution',
-  },
-  {
-    id: 'eclairage',
-    title: 'Éclairage Public',
-    desc: "Conception et réalisation de réseaux d'éclairage urbain et rural pour communes et collectivités.",
-    href: '/activites#eclairage',
-  },
-  {
-    id: 'solaire',
-    title: 'Solaire Photovoltaïque',
-    desc: 'Installations PV raccordées au réseau pour collectivités, MASEN et opérateurs industriels du Maroc.',
-    href: '/activites#solaire',
-  },
-  {
-    id: 'postes',
-    title: 'Postes de Transformation',
-    desc: 'Construction et équipement de postes HTA/HTB/BT, cabines préfabriquées et postes sources.',
-    href: '/activites#postes',
-  },
-];
+import { getSiteConfig, getAllActivities, getFeaturedProjects } from '@/lib/api';
+import StatsCounter from '@/components/home/StatsCounter';
+import YearIntro from '@/components/home/YearIntro';
+import ActivityCard from '@/components/home/ActivityCard';
+import ScrollReveal from '@/components/layout/ScrollReveal';
 
 const CATEGORY_BG = {
   Distribution: 'linear-gradient(135deg, #0a1628, #0d2040)',
@@ -63,14 +38,18 @@ const ActivityIcon = ({ id }) => {
 };
 
 export default async function HomePage() {
-  const data = await contentfulClient.request(GET_FEATURED_PROJECTS);
-  const recentProjects = data.projectCollection.items.map((item) => ({
+  const [config, activities, featuredItems] = await Promise.all([
+    getSiteConfig(),
+    getAllActivities(),
+    getFeaturedProjects(),
+  ]);
+
+  const recentProjects = featuredItems.map((item) => ({
     slug: item.slug,
     title: item.title,
     category: item.category,
     region: item.region,
     client: item.client,
-    year: item.year,
     thumbBg: item.coverImage
       ? `url(${item.coverImage.url}) center/cover no-repeat`
       : (CATEGORY_BG[item.category] ?? 'linear-gradient(135deg, #0a1628, #162540)'),
@@ -151,45 +130,10 @@ export default async function HomePage() {
         }
         .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
 
-        /* Stats bar */
-        .stats-bar {
-          background: #ffffff;
-          border-bottom: 1px solid rgba(10,22,40,0.08);
-        }
-        .stats-inner {
-          max-width: 1200px;
-          margin: 0 auto;
-          display: flex;
-          padding: 0 2.5rem;
-        }
-        .stat-item {
-          flex: 1;
-          text-align: center;
-          padding: 2.25rem 1.5rem;
-          border-right: 1px solid rgba(10,22,40,0.07);
-        }
-        .stat-item:last-child { border-right: none; }
-        .stat-val {
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: 2.75rem;
-          font-weight: 800;
-          color: #0a1628;
-          line-height: 1;
-          margin-bottom: 0.3rem;
-        }
-        .stat-val em { color: #00a3ff; font-style: normal; }
-        .stat-lbl {
-          font-size: 0.75rem;
-          font-weight: 600;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: rgba(10,22,40,0.4);
-        }
-
         /* Activity cards */
         .act-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(3, 1fr);
           gap: 1.25rem;
         }
         .act-card {
@@ -372,16 +316,15 @@ export default async function HomePage() {
         @media (max-width: 860px) {
           .home-hero { padding: 5rem 1.25rem 4rem; }
           .hero-hex, .hero-hex-sm { display: none; }
-          .stats-inner { flex-wrap: wrap; padding: 0 1.25rem; }
-          .stat-item { min-width: 50%; border-right: none; border-bottom: 1px solid rgba(10,22,40,0.07); }
           .proj-grid { grid-template-columns: 1fr; }
           .cta-band { padding: 4rem 1.25rem; }
         }
         @media (max-width: 580px) {
           .act-grid { grid-template-columns: 1fr; }
-          .stat-item { min-width: 100%; }
         }
       `}</style>
+
+      <YearIntro />
 
       {/* ── HERO ── */}
       <section className="home-hero">
@@ -389,57 +332,41 @@ export default async function HomePage() {
         <div className="hero-hex-sm" aria-hidden="true" />
         <div className="hero-inner">
           <div className="hero-kicker">BTP &amp; Énergie · Maroc</div>
-          <h1 className="hero-title">
-            Infrastructures<br />
-            Énergétiques<br />
-            pour le <span className="hl">Maroc</span>
-          </h1>
-          <p className="hero-sub">
-            Depuis plus de 20 ans, ATNER conçoit et réalise les infrastructures
-            électriques, solaires et de génie civil qui alimentent le Maroc.
-          </p>
+          <h1 className="hero-title">{config?.heroTitle ?? 'Infrastructures Énergétiques pour le Maroc'}</h1>
+          <p className="hero-sub">{config?.heroSubtitle ?? ''}</p>
           <div className="hero-actions">
-            <Link href="/contact" className="btn btn-primary">Nous Contacter</Link>
+            <Link href="/contact" className="btn btn-primary">{config?.heroCtaLabel ?? 'Nous Contacter'}</Link>
             <Link href="/realisations" className="btn btn-outline-white">Voir nos Réalisations →</Link>
           </div>
         </div>
       </section>
 
       {/* ── STATS ── */}
-      <div className="stats-bar">
-        <div className="stats-inner">
-          {[
-            { val: '+500', lbl: 'Projets Livrés' },
-            { val: '38+', lbl: "Années d'Expérience" },
-            { val: '12', lbl: 'Régions Couvertes' },
-            { val: '100%', lbl: 'Marchés Publics' },
-          ].map((s) => (
-            <div className="stat-item" key={s.lbl}>
-              <div className="stat-val">{s.val}</div>
-              <div className="stat-lbl">{s.lbl}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <StatsCounter
+        projectsCount={config?.projectsCount ?? '500+'}
+        yearsCount={config?.yearsCount ?? '20+'}
+        regionsCount={config?.regionsCount ?? '12'}
+      />
 
       {/* ── ACTIVITÉS ── */}
       <section className="section-surface">
         <div className="container">
-          <div className="section-header">
-            <span className="overline">Nos Expertises</span>
-            <h2>Nos Domaines d&apos;Activité</h2>
-            <p>Des prestations complètes en électricité, énergie renouvelable et génie civil pour les marchés publics marocains.</p>
-          </div>
+          <ScrollReveal>
+            <div className="section-header">
+              <span className="overline">Nos Expertises</span>
+              <h2>Nos Domaines d&apos;Activité</h2>
+              <p>Des prestations complètes en électricité, énergie renouvelable et génie civil pour les marchés publics marocains.</p>
+            </div>
+          </ScrollReveal>
           <div className="act-grid">
-            {activities.map((a) => (
-              <Link href={a.href} key={a.id} className="act-card">
-                <div className="act-icon">
-                  <ActivityIcon id={a.id} />
-                </div>
-                <div className="act-title">{a.title}</div>
-                <div className="act-desc">{a.desc}</div>
-                <span className="act-more">En savoir plus →</span>
-              </Link>
+            {activities.map((a, i) => (
+              <ScrollReveal key={a.slug} delay={i * 0.1}>
+                <ActivityCard
+                  activity={a}
+                  href={`/activites#${a.slug}`}
+                  icon={<ActivityIcon id={a.icon} />}
+                />
+              </ScrollReveal>
             ))}
           </div>
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
@@ -451,31 +378,35 @@ export default async function HomePage() {
       {/* ── RÉALISATIONS RÉCENTES ── */}
       <section className="section">
         <div className="container">
-          <div className="section-header">
-            <span className="overline">Références</span>
-            <h2>Réalisations Récentes</h2>
-            <p>Quelques projets représentatifs livrés récemment à travers le territoire national.</p>
-          </div>
+          <ScrollReveal>
+            <div className="section-header">
+              <span className="overline">Références</span>
+              <h2>Réalisations Récentes</h2>
+              <p>Quelques projets représentatifs livrés récemment à travers le territoire national.</p>
+            </div>
+          </ScrollReveal>
           <div className="proj-grid">
-            {recentProjects.map((p) => (
-              <Link href={`/realisations/${p.slug}`} key={p.slug} className="proj-card">
-                <div className="proj-thumb" style={{ background: p.thumbBg }}>
-                  <span className="proj-badge">{p.category}</span>
-                </div>
-                <div className="proj-body">
-                  <div className="proj-title">{p.title}</div>
-                  <div className="proj-meta">
-                    <div className="proj-meta-row">
-                      <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>
-                      {p.region}
-                    </div>
-                    <div className="proj-meta-row">
-                      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></svg>
-                      {p.client}
+            {recentProjects.map((p, i) => (
+              <ScrollReveal key={p.slug} delay={i * 0.1} direction="up">
+                <Link href={`/realisations/${p.slug}`} className="proj-card">
+                  <div className="proj-thumb" style={{ background: p.thumbBg }}>
+                    <span className="proj-badge">{p.category}</span>
+                  </div>
+                  <div className="proj-body">
+                    <div className="proj-title">{p.title}</div>
+                    <div className="proj-meta">
+                      <div className="proj-meta-row">
+                        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                        {p.region}
+                      </div>
+                      <div className="proj-meta-row">
+                        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" /></svg>
+                        {p.client}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </ScrollReveal>
             ))}
           </div>
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
@@ -492,22 +423,26 @@ export default async function HomePage() {
             <h2>Nos Clients Publics</h2>
             <p>Nous travaillons aux côtés des grands donneurs d&apos;ordres publics du Royaume.</p>
           </div>
-          <div className="clients-row">
-            {clients.map((c) => (
-              <div className="client-pill" key={c.name} title={c.full}>{c.name}</div>
-            ))}
-          </div>
+          <ScrollReveal direction="up">
+            <div className="clients-row">
+              {clients.map((c) => (
+                <div className="client-pill" key={c.name} title={c.full}>{c.name}</div>
+              ))}
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* ── CTA ── */}
       <section className="cta-band">
         <div className="container">
-          <div className="cta-title">Discutons de votre Projet</div>
-          <p className="cta-sub">
-            Notre Bureau d&apos;Études vous accompagne de la phase AO jusqu&apos;à la réception définitive.
-          </p>
-          <Link href="/contact" className="btn btn-primary">Contactez notre Bureau d&apos;Études</Link>
+          <ScrollReveal direction="scale">
+            <div className="cta-title">Discutons de votre Projet</div>
+            <p className="cta-sub">
+              Notre Bureau d&apos;Études vous accompagne de la phase AO jusqu&apos;à la réception définitive.
+            </p>
+            <Link href="/contact" className="btn btn-primary">Contactez notre Bureau d&apos;Études</Link>
+          </ScrollReveal>
         </div>
       </section>
     </>

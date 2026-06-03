@@ -1,44 +1,7 @@
 import Link from 'next/link';
-
-// TODO: replace with Contentful data
-const activities = [
-  {
-    id: 'distribution',
-    title: 'Distribution HTA / HTB / BT',
-    desc: 'Construction et réhabilitation de lignes aériennes et souterraines moyenne et basse tension. Câblage MT/BT, dérivations et branchements pour le réseau ONEE.',
-    details: ['Lignes aériennes HTA 22/60 kV', 'Câbles souterrains MT/BT', 'Réseaux de distribution rurale', 'Dérivations et branchements abonnés'],
-  },
-  {
-    id: 'eclairage',
-    title: 'Éclairage Public',
-    desc: "Études, fourniture et pose de réseaux d'éclairage public urbain et rural. Maintenance préventive et corrective pour communes et collectivités territoriales.",
-    details: ['Candélabres et armoires électriques', 'LED et technologie smart lighting', 'Réseaux souterrains BT éclairage', 'Maintenance multi-sites'],
-  },
-  {
-    id: 'solaire',
-    title: 'Solaire Photovoltaïque',
-    desc: "Conception et réalisation de centrales PV raccordées au réseau national. Installations pour collectivités, MASEN et industriels. De l'étude à la mise en service.",
-    details: ['Centrales PV 50 kWp à 5 MWp', 'Raccordement réseau HTB/HTA', 'Onduleurs et systèmes de supervision', 'Études de productible et bankability'],
-  },
-  {
-    id: 'postes',
-    title: 'Postes de Transformation',
-    desc: 'Construction, équipement et mise en service de postes de transformation HTA/HTB/BT. Cabines préfabriquées, postes sources et postes de livraison.',
-    details: ['Postes cabines préfabriquées BT', 'Postes sources 60/22 kV', 'Postes de livraison industriels', 'Équipements HTA/HTB (cellules, transformateurs)'],
-  },
-  {
-    id: 'vrd',
-    title: 'VRD & Génie Civil',
-    desc: 'Voirie, réseaux divers et génie civil associés aux projets électriques. Fouilles, massifs, génie civil de postes et tranchées pour câbles souterrains.',
-    details: ['Tranchées et pose de fourreaux', 'Génie civil de postes électriques', 'Terrassements et remblais', 'Dalots et ouvrages hydrauliques'],
-  },
-  {
-    id: 'etudes',
-    title: 'Études & Supervision',
-    desc: "Bureau d'études interne spécialisé en distribution électrique et PV. Réponse aux AO, plans d'exécution, métrés détaillés et supervision de chantier.",
-    details: ["Réponses aux appels d'offres ONEE", 'Plans AutoCAD et études HTA/BT', 'Supervision chantier et OPC', 'Réception technique et levée de réserves'],
-  },
-];
+import { getAllActivities } from '@/lib/api';
+import ActivityCard from '@/components/home/ActivityCard';
+import ScrollReveal from '@/components/layout/ScrollReveal';
 
 const steps = [
   { num: '01', title: "Appel d'Offres", desc: "Analyse du dossier AO, visite de site, préparation de l'offre technique et financière, dépôt dans les délais." },
@@ -64,7 +27,9 @@ const ActivityIcon = ({ id }) => {
   return <svg {...p}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>;
 };
 
-export default function ActivitesPage() {
+export default async function ActivitesPage() {
+  const activities = await getAllActivities();
+
   return (
     <>
       <style>{`
@@ -258,25 +223,24 @@ export default function ActivitesPage() {
       {/* ── ACTIVITÉS GRID ── */}
       <section className="section">
         <div className="container">
-          <div className="section-header">
-            <span className="overline">Ce que nous faisons</span>
-            <h2>Nos Activités</h2>
-            <p>De la distribution haute tension au solaire photovoltaïque, nos équipes maîtrisent l'intégralité des métiers de l'énergie.</p>
-          </div>
+          <ScrollReveal>
+            <div className="section-header">
+              <span className="overline">Ce que nous faisons</span>
+              <h2>Nos Activités</h2>
+              <p>De la distribution haute tension au solaire photovoltaïque, nos équipes maîtrisent l'intégralité des métiers de l'énergie.</p>
+            </div>
+          </ScrollReveal>
           <div className="act-full-grid">
-            {activities.map((a) => (
-              <div id={a.id} key={a.id} className="act-full-card">
-                <div className="act-full-icon">
-                  <ActivityIcon id={a.id} />
-                </div>
-                <div className="act-full-title">{a.title}</div>
-                <p className="act-full-desc">{a.desc}</p>
-                <div className="act-details">
-                  {a.details.map((d) => (
-                    <div className="act-detail-item" key={d}>{d}</div>
-                  ))}
-                </div>
-              </div>
+            {activities.map((a, i) => (
+              <ScrollReveal key={a.slug} delay={i * 0.1}>
+              <ActivityCard
+                activity={a}
+                id={a.slug}
+                icon={<ActivityIcon id={a.icon} />}
+                classPrefix="act-full"
+                showArrow={false}
+              />
+              </ScrollReveal>
             ))}
           </div>
         </div>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
-
-// TODO: replace with Contentful data
+import { getAllTeamMembers } from '@/lib/api';
+import FoundingCountdown from '@/components/qui-sommes-nous/FoundingCountdown';
+import ScrollReveal from '@/components/layout/ScrollReveal';
 const values = [
   {
     id: 'qualite',
@@ -48,34 +49,9 @@ const certifications = [
   },
 ];
 
-const team = [
-  {
-    id: 'direction',
-    title: 'Direction Générale',
-    desc: "Pilotage stratégique, relations institutionnelles avec ONEE, MASEN et ministères. Décisions contractuelles et partenariats.",
-    size: '2 cadres',
-  },
-  {
-    id: 'bureau',
-    title: "Bureau d'Études & Projets",
-    desc: "Réponse aux AO, études techniques HTA/BT/PV, métrés, plans d'exécution, coordination PMO et suivi budgétaire.",
-    size: '8 ingénieurs',
-  },
-  {
-    id: 'terrain',
-    title: 'Équipes Terrain',
-    desc: 'Chefs de chantier, électriciens, câbleurs et conducteurs engins déployés sur sites à travers les 12 régions.',
-    size: '+80 techniciens',
-  },
-  {
-    id: 'admin',
-    title: 'Administration & Finance',
-    desc: 'Gestion des marchés publics, facturation ONEE/collectivités, ressources humaines et conformité réglementaire.',
-    size: '5 collaborateurs',
-  },
-];
-
-export default function QuiSommesNousPage() {
+export default async function QuiSommesNousPage() {
+  const team = await getAllTeamMembers();
+  const departments = [...new Set(team.map((m) => m.department).filter(Boolean))];
   return (
     <>
       <style>{`
@@ -260,16 +236,32 @@ export default function QuiSommesNousPage() {
         }
 
         /* TEAM */
+        .dept-section {
+          margin-bottom: 2rem;
+        }
+        .dept-section + .dept-section {
+          padding-top: 2rem;
+          border-top: 1px solid rgba(10,22,40,0.07);
+        }
+        .team-dept-label {
+          text-align: center;
+          margin-bottom: 1.25rem;
+        }
         .team-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1.25rem;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 1.5rem;
+          margin-top: 1rem;
         }
         .team-card {
+          width: 280px;
+          flex-shrink: 0;
           background: #ffffff;
           border: 1px solid rgba(10,22,40,0.07);
-          border-radius: 6px;
-          padding: 2rem 1.75rem;
+          border-left: 3px solid #00a3ff;
+          border-radius: 8px;
+          padding: 1.5rem;
           transition: transform 0.22s, box-shadow 0.22s;
         }
         .team-card:hover {
@@ -309,17 +301,42 @@ export default function QuiSommesNousPage() {
           color: rgba(10,22,40,0.55);
           line-height: 1.65;
         }
+        .team-dept-label {
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #00a3ff;
+          text-align: center;
+          margin-bottom: 1.25rem;
+        }
+        .team-photo {
+          width: 64px;
+          height: 64px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin-bottom: 1rem;
+        }
+        .team-desc {
+          font-size: 0.88rem;
+          color: rgba(10,22,40,0.55);
+          line-height: 1.65;
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
 
         /* RESPONSIVE */
         @media (max-width: 1024px) {
-          .values-grid, .team-grid { grid-template-columns: repeat(2, 1fr); }
+          .values-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 860px) {
           .histoire-grid { grid-template-columns: 1fr; gap: 3rem; }
           .certs-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 580px) {
-          .values-grid, .team-grid { grid-template-columns: 1fr; }
+          .values-grid { grid-template-columns: 1fr; }
         }
       `}</style>
 
@@ -336,6 +353,7 @@ export default function QuiSommesNousPage() {
       <section className="section">
         <div className="container">
           <div className="histoire-grid">
+            <ScrollReveal direction="left">
             <div className="histoire-text">
               <span className="overline">Notre Histoire</span>
               <h2>Fondée à Rabat,<br />Présente Partout</h2>
@@ -352,6 +370,8 @@ export default function QuiSommesNousPage() {
               </p>
               <Link href="/realisations" className="btn btn-primary">Voir nos Réalisations</Link>
             </div>
+            </ScrollReveal>
+            <ScrollReveal direction="right">
             <div className="histoire-visual">
               <div className="histoire-year-badge">
                 Fondée en <span>2002</span> · Rabat, Maroc
@@ -371,9 +391,12 @@ export default function QuiSommesNousPage() {
                 </p>
               </div>
             </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
+
+      <FoundingCountdown />
 
       {/* ── NOS VALEURS ── */}
       <section className="section-surface">
@@ -385,11 +408,13 @@ export default function QuiSommesNousPage() {
           </div>
           <div className="values-grid">
             {values.map((v, i) => (
-              <div className="value-card" key={v.id}>
-                <div className="value-num">0{i + 1}</div>
-                <div className="value-title">{v.title}</div>
-                <div className="value-desc">{v.desc}</div>
-              </div>
+              <ScrollReveal key={v.id} delay={i * 0.1}>
+                <div className="value-card">
+                  <div className="value-num">0{i + 1}</div>
+                  <div className="value-title">{v.title}</div>
+                  <div className="value-desc">{v.desc}</div>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -404,19 +429,21 @@ export default function QuiSommesNousPage() {
             <p>Des qualifications officielles qui attestent de notre niveau d'exigence et de notre conformité aux standards du secteur.</p>
           </div>
           <div className="certs-grid">
-            {certifications.map((c) => (
-              <div className="cert-card" key={c.id}>
-                <div className="cert-badge-row">
-                  <div className="cert-hex" style={{ background: c.color }}>
-                    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
+            {certifications.map((c, i) => (
+              <ScrollReveal key={c.id} delay={i * 0.1}>
+                <div className="cert-card">
+                  <div className="cert-badge-row">
+                    <div className="cert-hex" style={{ background: c.color }}>
+                      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
+                    </div>
+                    <div>
+                      <div className="cert-label">{c.label}</div>
+                      <div className="cert-category">{c.category}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="cert-label">{c.label}</div>
-                    <div className="cert-category">{c.category}</div>
-                  </div>
+                  <p className="cert-desc">{c.desc}</p>
                 </div>
-                <p className="cert-desc">{c.desc}</p>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -430,17 +457,25 @@ export default function QuiSommesNousPage() {
             <h2>L'Organisation ATNER</h2>
             <p>Des équipes structurées par métier pour garantir réactivité, expertise et qualité d'exécution sur chaque projet.</p>
           </div>
-          <div className="team-grid">
-            {team.map((t) => (
-              <div className="team-card" key={t.id}>
-                <div className="team-card-header">
-                  <div className="team-title">{t.title}</div>
-                  <span className="team-size">{t.size}</span>
-                </div>
-                <p className="team-desc">{t.desc}</p>
+          {departments.map((dept) => (
+            <div key={dept} className="dept-section">
+              <div className="team-dept-label">{dept}</div>
+              <div className="team-grid">
+                {team.filter((m) => m.department === dept).map((m) => (
+                  <div className="team-card" key={m.sys.id}>
+                    {m.photo?.url && (
+                      <img className="team-photo" src={m.photo.url} alt={m.photo.title ?? m.name} width={72} height={72} />
+                    )}
+                    <div className="team-card-header">
+                      <div className="team-title">{m.name}</div>
+                      <span className="team-size">{m.role}</span>
+                    </div>
+                    <p className="team-desc">{m.bio}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
             <Link href="/contact" className="btn btn-primary">Nous Rejoindre</Link>
           </div>
