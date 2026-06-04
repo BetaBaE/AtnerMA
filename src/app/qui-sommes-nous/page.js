@@ -257,6 +257,8 @@ export default async function QuiSommesNousPage() {
         .team-card {
           width: 280px;
           flex-shrink: 0;
+          align-items : center ;
+          justify-content : center ;
           background: #ffffff;
           border: 1px solid rgba(10,22,40,0.07);
           border-left: 3px solid #00a3ff;
@@ -270,8 +272,9 @@ export default async function QuiSommesNousPage() {
         }
         .team-card-header {
           display: flex;
-          align-items: flex-start;
+          align-items: center;
           justify-content: space-between;
+          flex-direction: column;
           margin-bottom: 0.85rem;
           gap: 0.5rem;
         }
@@ -315,7 +318,8 @@ export default async function QuiSommesNousPage() {
           height: 64px;
           border-radius: 50%;
           object-fit: cover;
-          margin-bottom: 1rem;
+          display: block;
+          margin: 0 auto 1rem;
         }
         .team-desc {
           font-size: 0.88rem;
@@ -437,7 +441,7 @@ export default async function QuiSommesNousPage() {
                       <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
                     </div>
                     <div>
-                      <div className="cert-label">{c.label}</div>
+                      <div className="cert-label">{c.label}</div> 
                       <div className="cert-category">{c.category}</div>
                     </div>
                   </div>
@@ -467,8 +471,8 @@ export default async function QuiSommesNousPage() {
                       <img className="team-photo" src={m.photo.url} alt={m.photo.title ?? m.name} width={72} height={72} />
                     )}
                     <div className="team-card-header">
-                      <div className="team-title">{m.name}</div>
-                      <span className="team-size">{m.role}</span>
+                      <div className="team-title">{m.name}</div> 
+                      <div><span className="team-size">{m.role}</span></div>
                     </div>
                     <p className="team-desc">{m.bio}</p>
                   </div>

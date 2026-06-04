@@ -324,7 +324,7 @@ export default async function HomePage() {
         }
       `}</style>
 
-      <YearIntro />
+      
 
       {/* ── HERO ── */}
       <section className="home-hero">
