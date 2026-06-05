@@ -4,6 +4,7 @@ import StatsCounter from '@/components/home/StatsCounter';
 import YearIntro from '@/components/home/YearIntro';
 import ActivityCard from '@/components/home/ActivityCard';
 import ScrollReveal from '@/components/layout/ScrollReveal';
+import VideoHero from '@/components/home/VideoHero';
 
 const CATEGORY_BG = {
   Distribution: 'linear-gradient(135deg, #0a1628, #0d2040)',
@@ -58,78 +59,6 @@ export default async function HomePage() {
   return (
     <>
       <style>{`
-        .home-hero {
-          min-height: calc(100vh - 72px);
-          background:
-            radial-gradient(ellipse 80% 60% at 72% 50%, rgba(0,163,255,0.08) 0%, transparent 60%),
-            #0a1628;
-          display: flex;
-          align-items: center;
-          padding: 6rem 2.5rem 5rem;
-          position: relative;
-          overflow: hidden;
-        }
-        .hero-hex {
-          position: absolute;
-          right: -60px;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 560px;
-          height: 560px;
-          background: linear-gradient(135deg, rgba(0,163,255,0.05), rgba(0,102,204,0.04));
-          clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-          pointer-events: none;
-        }
-        .hero-hex-sm {
-          position: absolute;
-          right: 240px;
-          top: -80px;
-          width: 240px;
-          height: 240px;
-          background: rgba(0,163,255,0.035);
-          clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-          pointer-events: none;
-        }
-        .hero-inner { max-width: 1200px; margin: 0 auto; width: 100%; }
-        .hero-kicker {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.72rem;
-          font-weight: 700;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: #00a3ff;
-          margin-bottom: 1.5rem;
-        }
-        .hero-kicker::before {
-          content: '';
-          display: block;
-          width: 28px;
-          height: 2px;
-          background: #00a3ff;
-        }
-        .hero-title {
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: clamp(3rem, 7vw, 5.5rem);
-          font-weight: 800;
-          letter-spacing: 0.01em;
-          text-transform: uppercase;
-          color: #ffffff;
-          line-height: 1.03;
-          margin-bottom: 1.5rem;
-          max-width: 680px;
-        }
-        .hero-title .hl { color: #00a3ff; }
-        .hero-sub {
-          font-size: 1.05rem;
-          color: rgba(255,255,255,0.55);
-          line-height: 1.75;
-          max-width: 460px;
-          margin-bottom: 2.75rem;
-        }
-        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
-
         /* Activity cards */
         .act-grid {
           display: grid;
@@ -326,20 +255,12 @@ export default async function HomePage() {
 
       
 
-      {/* ── HERO ── */}
-      <section className="home-hero">
-        <div className="hero-hex" aria-hidden="true" />
-        <div className="hero-hex-sm" aria-hidden="true" />
-        <div className="hero-inner">
-          <div className="hero-kicker">BTP &amp; Énergie · Maroc</div>
-          <h1 className="hero-title">{config?.heroTitle ?? 'Infrastructures Énergétiques pour le Maroc'}</h1>
-          <p className="hero-sub">{config?.heroSubtitle ?? ''}</p>
-          <div className="hero-actions">
-            <Link href="/contact" className="btn btn-primary">{config?.heroCtaLabel ?? 'Nous Contacter'}</Link>
-            <Link href="/realisations" className="btn btn-outline-white">Voir nos Réalisations →</Link>
-          </div>
-        </div>
-      </section>
+      {/* ── HERO VIDEO ── */}
+      <VideoHero
+        title={config?.heroTitle ?? 'Infrastructures Énergétiques pour le Maroc'}
+        subtitle={config?.heroSubtitle ?? "Bureau d'études et entreprise de travaux spécialisés en distribution électrique, éclairage public, énergie solaire et génie civil."}
+        ctaLabel={config?.heroCtaLabel ?? 'Nous Contacter'}
+      />
 
       {/* ── STATS ── */}
       <StatsCounter

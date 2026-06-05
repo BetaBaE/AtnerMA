@@ -25,6 +25,14 @@
     padding: 0;
 }
 
+body.intro-playing {
+    overflow: hidden;
+}
+
+body.intro-playing #page-content {
+    visibility: hidden;
+}
+
 html {
     scroll-behavior: smooth;
 }

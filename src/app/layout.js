@@ -31,15 +31,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fr" className={`${barlow.variable} ${barlowCondensed.variable}`}>
-      <body>
+      <body suppressHydrationWarning className="intro-playing">
         <SiteIntro />
-        <SmoothScroll>
-          <Navbar />
-          <PageTransition>
-            <main>{children}</main>
-          </PageTransition>
-          <Footer />
-        </SmoothScroll>
+        <div id="page-content">
+          <SmoothScroll>
+            <Navbar />
+            <PageTransition>
+              <main>{children}</main>
+            </PageTransition>
+            <Footer />
+          </SmoothScroll>
+        </div>
       </body>
     </html>
   );

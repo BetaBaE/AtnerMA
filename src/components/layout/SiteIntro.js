@@ -17,10 +17,6 @@ export default function SiteIntro() {
     const overlay = overlayRef.current;
     if (!overlay) return;
 
-    // sessionStorage only accessed on the client, inside useEffect
-    if (sessionStorage.getItem('atner_intro_seen')) return;
-    sessionStorage.setItem('atner_intro_seen', 'true');
-
     // currentYear only computed on the client
     const currentYear = new Date().getFullYear();
 
@@ -165,6 +161,7 @@ export default function SiteIntro() {
       await new Promise((r) => setTimeout(r, 400));
       if (cancelled) return;
 
+      document.body.classList.remove('intro-playing');
       gsap.to(overlay, {
         opacity: 0,
         duration: 0.9,

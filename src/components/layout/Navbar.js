@@ -12,12 +12,18 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const [visible, setVisible] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', onScroll);
+    const onScroll = () => {
+      const y = window.scrollY;
+      // Show navbar only after user scrolls past 80% of viewport height
+      setVisible(y > window.innerHeight * 0.8);
+      setScrolled(y > window.innerHeight * 0.8 + 40);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -30,8 +36,16 @@ export default function Navbar() {
           left: 0;
           right: 0;
           z-index: 100;
-          transition: all 0.35s ease;
           padding: 0 2.5rem;
+          transition: transform 0.45s cubic-bezier(0.16,1,0.3,1), background 0.35s ease, box-shadow 0.35s ease, opacity 0.45s ease;
+          transform: translateY(-100%);
+          opacity: 0;
+          pointer-events: none;
+        }
+        .navbar.nav-visible {
+          transform: translateY(0);
+          opacity: 1;
+          pointer-events: all;
         }
         .navbar.transparent {
           background: rgba(255,255,255,0.92);
@@ -209,7 +223,7 @@ export default function Navbar() {
         rel="stylesheet"
       />
 
-      <nav className={`navbar ${scrolled ? 'solid' : 'transparent'}`}>
+      <nav className={`navbar ${visible ? 'nav-visible' : ''} ${scrolled ? 'solid' : 'transparent'}`}>
         <div className="navbar-inner">
           {/* Logo */}
           <Link href="/" className="navbar-logo">
