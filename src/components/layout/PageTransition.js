@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
+import Image from 'next/image';
 
 // Shared ref so the intercept handler can trigger the wipe
 let triggerWipe = null;
@@ -120,8 +121,19 @@ export default function PageTransition({ children }) {
           background: 'linear-gradient(135deg, #0a1628 60%, #00a3ff 100%)',
           clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)',
           pointerEvents: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
-      />
+      >
+        <Image
+          src="/LOGO_Rev.png"
+          alt="ATNER"
+          width={140}
+          height={50}
+          style={{ height: 'auto', opacity: 0.92, userSelect: 'none' }}
+        />
+      </div>
 
       {/* Page content */}
       <div ref={contentRef} style={{ opacity: 1 }}>

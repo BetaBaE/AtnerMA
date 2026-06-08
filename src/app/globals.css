@@ -221,27 +221,62 @@ h4 {
     box-shadow: 0 8px 24px rgba(0, 163, 255, 0.35);
 }
 
+/* Water-flood hover — blue rises from bottom */
+.btn-outline-white,
+.btn-outline-navy {
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.btn-outline-white::before,
+.btn-outline-navy::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: scaleY(0);
+    transform-origin: bottom center;
+    transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: -1;
+    border-radius: inherit;
+}
+
 .btn-outline-white {
-    background: transparent;
     color: rgba(255, 255, 255, 0.8);
     border: 1.5px solid rgba(255, 255, 255, 0.25);
+    transition: color 0.28s, border-color 0.28s;
+}
+
+.btn-outline-white::before {
+    background: linear-gradient(135deg, #00a3ff, #0066cc);
 }
 
 .btn-outline-white:hover {
-    border-color: rgba(255, 255, 255, 0.65);
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.05);
+    border-color: #00a3ff;
+}
+
+.btn-outline-white:hover::before {
+    transform: scaleY(1);
 }
 
 .btn-outline-navy {
-    background: transparent;
     color: var(--navy);
     border: 1.5px solid rgba(10, 22, 40, 0.2);
+    transition: color 0.28s, border-color 0.28s;
+}
+
+.btn-outline-navy::before {
+    background: #0a1628;
 }
 
 .btn-outline-navy:hover {
-    border-color: var(--navy);
-    background: rgba(10, 22, 40, 0.04);
+    color: #ffffff;
+    border-color: #0a1628;
+}
+
+.btn-outline-navy:hover::before {
+    transform: scaleY(1);
 }
 
 /* Responsive */
