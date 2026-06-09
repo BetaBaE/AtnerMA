@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getAllTeamMembers } from '@/lib/api';
-import FoundingCountdown from '@/components/qui-sommes-nous/FoundingCountdown';
+import HistoryTimeline from '@/components/qui-sommes-nous/HistoryTimeline';
 import ScrollReveal from '@/components/layout/ScrollReveal';
 const values = [
   {
@@ -55,72 +55,6 @@ export default async function QuiSommesNousPage() {
   return (
     <>
       <style>{`
-        /* HISTOIRE */
-        .histoire-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 5rem;
-          align-items: center;
-        }
-        .histoire-text h2 {
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: 2.5rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          color: #0a1628;
-          letter-spacing: 0.02em;
-          margin-bottom: 1.5rem;
-          line-height: 1.1;
-        }
-        .histoire-text p {
-          font-size: 0.97rem;
-          color: rgba(10,22,40,0.65);
-          line-height: 1.8;
-          margin-bottom: 1rem;
-        }
-        .histoire-text p:last-of-type { margin-bottom: 1.75rem; }
-        .histoire-visual {
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-        }
-        .mv-card {
-          background: #f0f5ff;
-          border-left: 3px solid #00a3ff;
-          padding: 1.5rem 1.75rem;
-          border-radius: 0 6px 6px 0;
-        }
-        .mv-card h4 {
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: 0.75rem;
-          font-weight: 700;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: #00a3ff;
-          margin-bottom: 0.5rem;
-        }
-        .mv-card p {
-          font-size: 0.92rem;
-          color: rgba(10,22,40,0.7);
-          line-height: 1.6;
-        }
-        .histoire-year-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.75rem;
-          background: #0a1628;
-          color: #ffffff;
-          padding: 0.6rem 1.25rem;
-          border-radius: 4px;
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: 0.85rem;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          margin-bottom: 1.5rem;
-        }
-        .histoire-year-badge span { color: #00a3ff; font-size: 1.4rem; }
-
         /* VALUES */
         .values-grid {
           display: grid;
@@ -336,7 +270,6 @@ export default async function QuiSommesNousPage() {
           .values-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 860px) {
-          .histoire-grid { grid-template-columns: 1fr; gap: 3rem; }
           .certs-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 580px) {
@@ -353,58 +286,7 @@ export default async function QuiSommesNousPage() {
         </div>
       </section>
 
-      {/* ── NOTRE HISTOIRE ── */}
-      <section className="section">
-        <div className="container">
-          <div className="histoire-grid">
-            <ScrollReveal direction="left">
-            <div className="histoire-text">
-              <span className="overline">Notre Histoire</span>
-              <h2>Fondée à Rabat,<br />Présente Partout</h2>
-              <p>
-                Fondée en 1988 à Rabat, ATNER s'est imposée comme leader national opérant dans les services
-                de l'eau et des travaux publics. Aujourd'hui, ATNER dispose des compétences et des moyens
-                qui couvrent l'ensemble des problématiques liées à l'hydraulique et l'environnement.
-                L'entreprise se démarque grâce aux connaissances, aux qualifications et à l'expertise
-                de son personnel et de ses dirigeants.
-              </p>
-              <Link href="/realisations" className="btn btn-primary">Voir nos Réalisations</Link>
-            </div>
-            </ScrollReveal>
-            <ScrollReveal direction="right">
-            <div className="histoire-visual">
-              <div className="histoire-year-badge">
-                Fondée en <span>1988</span> · Rabat, Maroc
-              </div>
-              <div className="mv-card">
-                <h4>Notre Mission</h4>
-                <p>
-                  Concevoir, réaliser et maintenir les infrastructures énergétiques du Maroc avec
-                  excellence, en partenariat avec les acteurs publics nationaux et régionaux.
-                </p>
-              </div>
-              <div className="mv-card">
-                <h4>Notre Vision</h4>
-                <p>
-                  Être le partenaire de référence des donneurs d'ordres publics marocains pour les
-                  projets électriques, solaires et d'éclairage à horizon 2030.
-                </p>
-              </div>
-              <div className="mv-card">
-                <h4>Développement Durable</h4>
-                <p>
-                  Entreprise responsable, ATNER a pris des engagements précis pour relever les défis
-                  économiques, sociaux et environnementaux. ATNER propose des solutions innovantes
-                  pour une gestion de l'eau raisonnée et durable.
-                </p>
-              </div>
-            </div>
-            </ScrollReveal>
-          </div>
-        </div>
-      </section>
-
-      <FoundingCountdown />
+      <HistoryTimeline />
 
       {/* ── NOS VALEURS ── */}
       <section className="section-surface">
