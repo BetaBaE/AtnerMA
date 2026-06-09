@@ -14,9 +14,10 @@ const SECTION_THEME = {
 const GAP_PX = 10;
 
 export default function SectionScrollBar({ sections }) {
-  const [progress,   setProgress]   = useState(0);
-  const [active,     setActive]     = useState(0);
-  const [segHeights, setSegHeights] = useState([]);
+  const [progress,     setProgress]     = useState(0);
+  const [active,       setActive]       = useState(0);
+  const [segHeights,   setSegHeights]   = useState([]);
+  const [trackHeight,  setTrackHeight]  = useState(0);
   const trackRef = useRef(null);
   const rafRef   = useRef(null);
 
@@ -28,6 +29,7 @@ export default function SectionScrollBar({ sections }) {
       const raw   = els.map((el) => (el ? el.offsetHeight / total : 0));
       const sum   = raw.reduce((a, b) => a + b, 0);
       setSegHeights(sum > 0 ? raw.map((h) => h / sum) : raw.map(() => 1 / sections.length));
+      if (trackRef.current) setTrackHeight(trackRef.current.offsetHeight);
     }
 
     function update() {
@@ -59,9 +61,8 @@ export default function SectionScrollBar({ sections }) {
     document.querySelector(`[data-section="${id}"]`)?.scrollIntoView({ behavior: 'smooth' });
   }
 
-  const trackHeight = trackRef.current?.offsetHeight ?? 0;
-  const totalGap    = GAP_PX * (sections.length - 1);
-  const usableH     = trackHeight - totalGap;
+  const totalGap = GAP_PX * (sections.length - 1);
+  const usableH  = trackHeight - totalGap;
 
   return (
     <>

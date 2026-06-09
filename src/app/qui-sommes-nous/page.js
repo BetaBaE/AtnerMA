@@ -282,7 +282,7 @@ export default async function QuiSommesNousPage() {
         <div className="page-hero-inner">
           <div className="page-hero-label">Entreprise</div>
           <h1>ATNER —<br />Atlas Énergie</h1>
-          <p>Fondée à Rabat, engagée dans l'excellence des infrastructures énergétiques marocaines depuis plus de deux décennies.</p>
+          <p>Fondée à Rabat, engagée dans l&apos;excellence des infrastructures énergétiques marocaines depuis plus de deux décennies.</p>
         </div>
       </section>
 
@@ -316,7 +316,7 @@ export default async function QuiSommesNousPage() {
           <div className="section-header">
             <span className="overline">Accréditations</span>
             <h2>Habilitations &amp; Certifications</h2>
-            <p>Des qualifications officielles qui attestent de notre niveau d'exigence et de notre conformité aux standards du secteur.</p>
+            <p>Des qualifications officielles qui attestent de notre niveau d&apos;exigence et de notre conformité aux standards du secteur.</p>
           </div>
           <div className="certs-grid">
             {certifications.map((c, i) => (
@@ -344,8 +344,8 @@ export default async function QuiSommesNousPage() {
         <div className="container">
           <div className="section-header">
             <span className="overline">Notre Équipe</span>
-            <h2>L'Organisation ATNER</h2>
-            <p>Des équipes structurées par métier pour garantir réactivité, expertise et qualité d'exécution sur chaque projet.</p>
+            <h2>L&apos;Organisation ATNER</h2>
+            <p>Des équipes structurées par métier pour garantir réactivité, expertise et qualité d&apos;exécution sur chaque projet.</p>
           </div>
           {departments.map((dept) => (
             <div key={dept} className="dept-section">
