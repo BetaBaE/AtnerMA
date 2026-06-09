@@ -4,10 +4,10 @@ import ActivityCard from '@/components/home/ActivityCard';
 import ScrollReveal from '@/components/layout/ScrollReveal';
 
 const steps = [
-  { num: '01', title: "Appel d'Offres", desc: "Analyse du dossier AO, visite de site, préparation de l'offre technique et financière, dépôt dans les délais." },
-  { num: '02', title: 'Étude & Planification', desc: "Études techniques détaillées, plans d'exécution, planning Gantt, commandes fournisseurs et mobilisation des équipes." },
-  { num: '03', title: 'Exécution Terrain', desc: "Déploiement des équipes, travaux de génie civil et pose, tests et mesures, rapports d'avancement hebdomadaires." },
-  { num: '04', title: 'Réception & Clôture', desc: "Essais de mise en service, levée de réserves, réception provisoire ONEE/maître d'ouvrage, remise du DOE." },
+  { num: '01', title: "Appel d'Offre", desc: "Analyse du dossier AO, visite de site, préparation de l'offre technique et financière, dépôt dans les délais." },
+  { num: '02', title: 'Étude', desc: "Études techniques détaillées, plans d'exécution, planning Gantt, commandes fournisseurs et mobilisation des équipes." },
+  { num: '03', title: 'Exécution', desc: "Déploiement des équipes, travaux de génie civil et pose, tests et mesures, rapports d'avancement hebdomadaires." },
+  { num: '04', title: 'Réception', desc: "Essais de mise en service, levée de réserves, réception provisoire ONEE/maître d'ouvrage, remise du DOE." },
 ];
 
 const references = [

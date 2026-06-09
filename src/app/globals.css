@@ -301,3 +301,7 @@ h4 {
         font-size: 1.75rem;
     }
 }
+
+.reveal-hidden {
+    opacity: 0;
+}

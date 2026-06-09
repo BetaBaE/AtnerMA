@@ -22,38 +22,33 @@ export default function SiteIntro() {
 
     const PERIODS = [
       {
-        yearStart: currentYear,
         yearEnd: 2015,
-        label: "Aujourd'hui",
-        desc: "Expansion nationale et projets d'envergure",
+        label: '2009 — 2015',
+        desc: 'Diversification et nouvelles expertises',
         image: '/intro/load_LAST.jpg',
       },
       {
-        yearStart: 2015,
         yearEnd: 2009,
-        label: '2009 — 2015',
-        desc: 'Diversification et nouvelles expertises',
+        label: '2004 — 2009',
+        desc: 'Croissance et marchés publics nationaux',
         image: '/intro/load_4.jpg',
       },
       {
-        yearStart: 2009,
         yearEnd: 2004,
-        label: '2004 — 2009',
-        desc: 'Croissance et marchés publics nationaux',
+        label: '1996 — 2004',
+        desc: 'Premiers grands marchés publics',
         image: '/intro/load_3.jpg',
       },
       {
-        yearStart: 2004,
         yearEnd: 1996,
-        label: '1996 — 2004',
-        desc: 'Premiers grands marchés publics',
+        label: '1988 — 1996',
+        desc: 'Création et spécialisation hydraulique',
         image: '/intro/load_2.jpg',
       },
       {
-        yearStart: 1996,
         yearEnd: 1988,
-        label: '1988 — 1996',
-        desc: 'Création et spécialisation hydraulique',
+        label: 'Fondée en 1988',
+        desc: 'ATNER — Atlas Énergie, Rabat, Maroc',
         image: '/intro/load_1.jpg',
       },
     ];

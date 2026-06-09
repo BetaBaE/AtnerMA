@@ -362,15 +362,11 @@ export default async function QuiSommesNousPage() {
               <span className="overline">Notre Histoire</span>
               <h2>Fondée à Rabat,<br />Présente Partout</h2>
               <p>
-                ATNER — Atlas Énergie a été fondée au début des années 2000 à Rabat par des ingénieurs
-                spécialisés en distribution électrique. Dès ses premières années, l'entreprise s'est
-                positionnée sur les marchés ONEE, puis a progressivement élargi son portefeuille aux
-                collectivités territoriales et aux projets d'énergie renouvelable.
-              </p>
-              <p>
-                Aujourd'hui, ATNER est active dans les 12 régions du Royaume, avec plus de 500 projets
-                livrés, allant de la pose de lignes HTA rurales à la réalisation de centrales photovoltaïques
-                raccordées au réseau national.
+                Fondée en 1988 à Rabat, ATNER s'est imposée comme leader national opérant dans les services
+                de l'eau et des travaux publics. Aujourd'hui, ATNER dispose des compétences et des moyens
+                qui couvrent l'ensemble des problématiques liées à l'hydraulique et l'environnement.
+                L'entreprise se démarque grâce aux connaissances, aux qualifications et à l'expertise
+                de son personnel et de ses dirigeants.
               </p>
               <Link href="/realisations" className="btn btn-primary">Voir nos Réalisations</Link>
             </div>
@@ -378,7 +374,7 @@ export default async function QuiSommesNousPage() {
             <ScrollReveal direction="right">
             <div className="histoire-visual">
               <div className="histoire-year-badge">
-                Fondée en <span>2002</span> · Rabat, Maroc
+                Fondée en <span>1988</span> · Rabat, Maroc
               </div>
               <div className="mv-card">
                 <h4>Notre Mission</h4>
@@ -392,6 +388,14 @@ export default async function QuiSommesNousPage() {
                 <p>
                   Être le partenaire de référence des donneurs d'ordres publics marocains pour les
                   projets électriques, solaires et d'éclairage à horizon 2030.
+                </p>
+              </div>
+              <div className="mv-card">
+                <h4>Développement Durable</h4>
+                <p>
+                  Entreprise responsable, ATNER a pris des engagements précis pour relever les défis
+                  économiques, sociaux et environnementaux. ATNER propose des solutions innovantes
+                  pour une gestion de l'eau raisonnée et durable.
                 </p>
               </div>
             </div>

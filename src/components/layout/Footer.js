@@ -26,15 +26,19 @@ const footerLinks = [
 const contacts = [
   {
     label: 'Siège Social',
-    lines: ['Rabat, Maroc'],
+    lines: ['24, Route du Sud, Midelt'],
+  },
+  {
+    label: 'Succursale',
+    lines: ['Hay Ryad, Rabat'],
   },
   {
     label: 'Téléphone',
-    lines: ['+212 5XX XXX XXX'],
+    lines: ['05 35 58 06 42 / 05 37 56 35 93'],
   },
   {
     label: 'Email',
-    lines: ['contact@atner.ma'],
+    lines: ['contact@atner.co.ma'],
   },
 ];
 

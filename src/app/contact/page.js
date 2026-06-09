@@ -7,26 +7,26 @@ const contactInfo = [
   {
     id: 'siege',
     label: 'Siège Social',
-    lines: ['123, Avenue Hassan II', 'Rabat 10000 — Maroc'],
+    lines: ['24, Route du Sud, Midelt'],
+    icon: 'location',
+  },
+  {
+    id: 'succursale',
+    label: 'Succursale',
+    lines: ['4, Immeuble Elyamama A, Avenue Ennakhil', 'Hay Ryad, Rabat'],
     icon: 'location',
   },
   {
     id: 'tel',
-    label: 'Téléphone',
-    lines: ['+212 5XX XXX XXX', '+212 6XX XXX XXX'],
+    label: 'Téléphone / Fax',
+    lines: ['Tél : 05 35 58 06 42 / 05 37 56 35 93', 'Fax : 05 35 58 02 34'],
     icon: 'phone',
   },
   {
     id: 'email',
     label: 'Email',
-    lines: ['contact@atner.ma', 'bureau.etudes@atner.ma'],
+    lines: ['contact@atner.co.ma'],
     icon: 'mail',
-  },
-  {
-    id: 'rc',
-    label: 'Informations Légales',
-    lines: ['RC : 123456 · ICE : 00XXXXXXXXX', 'IF : XXXXXXX · Patente : XXXXXXX'],
-    icon: 'info',
   },
 ];
 
@@ -442,11 +442,16 @@ export default function ContactPage() {
             <span className="overline">Localisation</span>
             <h2>Notre Siège — Rabat</h2>
           </div>
-          <div className="map-placeholder">
-            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" /><circle cx="12" cy="10" r="3" /></svg>
-            <p>Carte Google Maps — Rabat, Maroc</p>
-          </div>
-          {/* TODO: replace with <iframe src="https://maps.google.com/..." /> */}
+          <iframe
+            src="https://maps.google.com/maps?q=ATNER+Hay+Ryad+Rabat+Maroc&output=embed"
+            width="100%"
+            height="320"
+            style={{ border: 0, borderRadius: '8px' }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="ATNER Hay Ryad Rabat Maroc"
+          />
         </div>
       </section>
     </>

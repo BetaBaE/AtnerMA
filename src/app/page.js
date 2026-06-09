@@ -14,12 +14,12 @@ const CATEGORY_BG = {
 };
 
 const clients = [
-  { name: 'ONEE', full: "Office National de l'Électricité et de l'Eau Potable" },
-  { name: 'MASEN', full: 'Moroccan Agency for Sustainable Energy' },
+  { name: 'ONEE', full: "Office National de l'Eau et de l'Électricité" },
+  { name: 'RADEEJ', full: 'Régie Autonome de Distribution Eau et Électricité' },
+  { name: 'JESA', full: 'Jacobs Engineering SA' },
   { name: 'Min. Équipement', full: "Ministère de l'Équipement et de l'Eau" },
-  { name: 'Communes Urbaines', full: 'Collectivités Territoriales' },
-  { name: 'CRI', full: "Centres Régionaux d'Investissement" },
-  { name: 'MCA Maroc', full: 'Millennium Challenge Account Morocco' },
+  { name: 'Communes', full: 'Collectivités Territoriales' },
+  { name: 'ONEP', full: "Office National de l'Eau Potable" },
 ];
 
 const ActivityIcon = ({ id }) => {
