@@ -89,6 +89,9 @@ export default function PageTransition({ children }) {
   // Intercept all <a> clicks on internal links
   useEffect(() => {
     function handleClick(e) {
+      // Let clicks with data-no-wipe attribute handle their own navigation
+      if (e.defaultPrevented) return;
+
       const anchor = e.target.closest('a');
       if (!anchor) return;
 
