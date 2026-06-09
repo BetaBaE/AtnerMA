@@ -5,6 +5,16 @@ import YearIntro from '@/components/home/YearIntro';
 import ActivityCard from '@/components/home/ActivityCard';
 import ScrollReveal from '@/components/layout/ScrollReveal';
 import VideoHero from '@/components/home/VideoHero';
+import SectionScrollBar from '@/components/layout/SectionScrollBar';
+
+const SECTIONS = [
+  { id: 'hero',         label: 'Accueil' },
+  { id: 'stats',        label: 'Chiffres' },
+  { id: 'activites',    label: 'Activités' },
+  { id: 'realisations', label: 'Réalisations' },
+  { id: 'clients',      label: 'Clients' },
+  { id: 'contact',      label: 'Contact' },
+];
 
 const CATEGORY_BG = {
   Distribution: 'linear-gradient(135deg, #0a1628, #0d2040)',
@@ -255,22 +265,28 @@ export default async function HomePage() {
 
       
 
+      <SectionScrollBar sections={SECTIONS} />
+
       {/* ── HERO VIDEO ── */}
-      <VideoHero
-        title={config?.heroTitle ?? 'Infrastructures Énergétiques pour le Maroc'}
-        subtitle={config?.heroSubtitle ?? "Bureau d'études et entreprise de travaux spécialisés en distribution électrique, éclairage public, énergie solaire et génie civil."}
-        ctaLabel={config?.heroCtaLabel ?? 'Nous Contacter'}
-      />
+      <div data-section="hero">
+        <VideoHero
+          title={config?.heroTitle ?? 'Infrastructures Énergétiques pour le Maroc'}
+          subtitle={config?.heroSubtitle ?? "Bureau d'études et entreprise de travaux spécialisés en distribution électrique, éclairage public, énergie solaire et génie civil."}
+          ctaLabel={config?.heroCtaLabel ?? 'Nous Contacter'}
+        />
+      </div>
 
       {/* ── STATS ── */}
-      <StatsCounter
-        projectsCount={config?.projectsCount ?? '500+'}
-        yearsCount={config?.yearsCount ?? '20+'}
-        regionsCount={config?.regionsCount ?? '12'}
-      />
+      <div data-section="stats">
+        <StatsCounter
+          projectsCount={config?.projectsCount ?? '500+'}
+          yearsCount={config?.yearsCount ?? '20+'}
+          regionsCount={config?.regionsCount ?? '12'}
+        />
+      </div>
 
       {/* ── ACTIVITÉS ── */}
-      <section className="section-surface">
+      <section className="section-surface" data-section="activites">
         <div className="container">
           <ScrollReveal>
             <div className="section-header">
@@ -297,7 +313,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── RÉALISATIONS RÉCENTES ── */}
-      <section className="section">
+      <section className="section" data-section="realisations">
         <div className="container">
           <ScrollReveal>
             <div className="section-header">
@@ -337,7 +353,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── CLIENTS ── */}
-      <section className="section-surface">
+      <section className="section-surface" data-section="clients">
         <div className="container">
           <div className="section-header" style={{ marginBottom: '2.5rem' }}>
             <span className="overline">Confiance</span>
@@ -355,7 +371,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="cta-band">
+      <section className="cta-band" data-section="contact">
         <div className="container">
           <ScrollReveal direction="scale">
             <div className="cta-title">Discutons de votre Projet</div>

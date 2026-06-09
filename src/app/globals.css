@@ -37,6 +37,12 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Hide native scrollbar */
+::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
 body {
     background: var(--white);
     color: var(--text);

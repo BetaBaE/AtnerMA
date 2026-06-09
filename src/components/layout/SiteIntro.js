@@ -3,6 +3,75 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
+function InvertCursor({ containerRef }) {
+  const circleRef = useRef(null);
+  const pos = useRef({ x: -200, y: -200 });
+  const cur = useRef({ x: -200, y: -200 });
+  const rafId = useRef(null);
+  const visible = useRef(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const circle    = circleRef.current;
+    if (!container || !circle) return;
+
+    function onMove(e) {
+      const rect = container.getBoundingClientRect();
+      pos.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      if (!visible.current) {
+        visible.current = true;
+        gsap.to(circle, { opacity: 1, duration: 0.3 });
+        // hide the system cursor while inside
+        container.style.cursor = 'none';
+      }
+    }
+
+    function onLeave() {
+      visible.current = false;
+      gsap.to(circle, { opacity: 0, duration: 0.25 });
+      container.style.cursor = '';
+    }
+
+    function loop() {
+      cur.current.x += (pos.current.x - cur.current.x) * 0.12;
+      cur.current.y += (pos.current.y - cur.current.y) * 0.12;
+      circle.style.transform = `translate(${cur.current.x}px, ${cur.current.y}px) translate(-50%, -50%)`;
+      rafId.current = requestAnimationFrame(loop);
+    }
+
+    container.addEventListener('mousemove', onMove);
+    container.addEventListener('mouseleave', onLeave);
+    rafId.current = requestAnimationFrame(loop);
+
+    return () => {
+      container.removeEventListener('mousemove', onMove);
+      container.removeEventListener('mouseleave', onLeave);
+      container.style.cursor = '';
+      cancelAnimationFrame(rafId.current);
+    };
+  }, [containerRef]);
+
+  return (
+    <div
+      ref={circleRef}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: 144,
+        height: 144,
+        borderRadius: '50%',
+        background: '#ffffff',
+        mixBlendMode: 'difference',
+        pointerEvents: 'none',
+        zIndex: 10,
+        opacity: 0,
+        willChange: 'transform',
+      }}
+    />
+  );
+}
+
 export default function SiteIntro() {
   const overlayRef = useRef(null);
   const yearRef = useRef(null);
@@ -186,6 +255,9 @@ export default function SiteIntro() {
         overflow: 'hidden',
       }}
     >
+      {/* Inverted cursor */}
+      <InvertCursor containerRef={overlayRef} />
+
       {/* Image layer A — first image set by effect */}
       <div
         ref={layerARef}
