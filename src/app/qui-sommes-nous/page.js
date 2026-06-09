@@ -316,7 +316,7 @@ export default async function QuiSommesNousPage() {
           <div className="section-header">
             <span className="overline">Accréditations</span>
             <h2>Habilitations &amp; Certifications</h2>
-            <p>Des qualifications officielles qui attestent de notre niveau d'exigence et de notre conformité aux standards du secteur.</p>
+            <p>Des qualifications officielles qui attestent de notre niveau d&apos;exigence et de notre conformité aux standards du secteur.</p>
           </div>
           <div className="certs-grid">
             {certifications.map((c, i) => (
