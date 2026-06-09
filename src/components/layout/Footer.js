@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const footerLinks = [
   {
@@ -77,13 +78,6 @@ export default function Footer() {
           gap: 0.6rem;
           text-decoration: none;
           margin-bottom: 0.25rem;
-        }
-        .footer-logo-mark {
-          width: 32px;
-          height: 32px;
-          background: linear-gradient(135deg, #00a3ff, #0066cc);
-          clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-          flex-shrink: 0;
         }
         .footer-logo-text {
           font-family: 'Barlow Condensed', sans-serif;
@@ -218,7 +212,13 @@ export default function Footer() {
             {/* Brand column */}
             <div className="footer-brand">
               <Link href="/" className="footer-logo">
-                <div className="footer-logo-mark" />
+                <Image
+                  src="/images/logo-atner.png"
+                  alt="ATNER"
+                  width={30}
+                  height={30}
+                  style={{ objectFit: 'contain' }}
+                />
                 <span className="footer-logo-text">AT<span>NER</span></span>
               </Link>
               <p className="footer-tagline">

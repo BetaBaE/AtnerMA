@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const navLinks = [
   { label: 'Accueil', href: '/' },
@@ -71,16 +72,6 @@ export default function Navbar() {
           align-items: center;
           gap: 0.6rem;
           text-decoration: none;
-        }
-        .logo-mark {
-          width: 36px;
-          height: 36px;
-          background: linear-gradient(135deg, #00a3ff, #0066cc);
-          clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
         }
         .logo-text {
           font-family: 'Barlow Condensed', sans-serif;
@@ -227,7 +218,13 @@ export default function Navbar() {
         <div className="navbar-inner">
           {/* Logo */}
           <Link href="/" className="navbar-logo">
-            <div className="logo-mark" />
+            <Image
+              src="/images/logo-atner.png"
+              alt="ATNER Logo"
+              width={36}
+              height={36}
+              style={{ objectFit: 'contain' }}
+            />
             <div>
               <span className="logo-text">AT<span>NER</span></span>
               <span className="logo-sub">Atlas Énergie · Maroc</span>
