@@ -215,8 +215,8 @@ export default async function ActivitesPage() {
       <section className="page-hero">
         <div className="page-hero-inner">
           <div className="page-hero-label">Expertises</div>
-          <h1>Nos Domaines<br />d'Expertise</h1>
-          <p>Six domaines d'activité complémentaires couvrant l'ensemble des besoins en infrastructures électriques et énergétiques au Maroc.</p>
+          <h1>Nos Domaines<br />d&apos;Expertise</h1>
+          <p>Six domaines d&apos;activité complémentaires couvrant l&apos;ensemble des besoins en infrastructures électriques et énergétiques au Maroc.</p>
         </div>
       </section>
 
@@ -227,7 +227,7 @@ export default async function ActivitesPage() {
             <div className="section-header">
               <span className="overline">Ce que nous faisons</span>
               <h2>Nos Activités</h2>
-              <p>De la distribution haute tension au solaire photovoltaïque, nos équipes maîtrisent l'intégralité des métiers de l'énergie.</p>
+              <p>De la distribution haute tension au solaire photovoltaïque, nos équipes maîtrisent l&apos;intégralité des métiers de l&apos;énergie.</p>
             </div>
           </ScrollReveal>
           <div className="act-full-grid">

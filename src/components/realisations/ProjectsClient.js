@@ -101,9 +101,7 @@ export default function ProjectsClient({ projects }) {
       const p = pixiRef.current;
       if (p) {
         window.removeEventListener('resize', p.onResize);
-        // Remove canvas from DOM before destroying
-        if (p.app.canvas?.parentNode) p.app.canvas.parentNode.removeChild(p.app.canvas);
-        p.app.destroy(true, { children: true });
+        p.app.destroy(false, { children: true });
         pixiRef.current = null;
       }
     };

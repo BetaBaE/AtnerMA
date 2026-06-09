@@ -292,7 +292,7 @@ export default function ContactPage() {
         <div className="page-hero-inner">
           <div className="page-hero-label">Contact</div>
           <h1>Contactez<br />ATNER</h1>
-          <p>Notre bureau d'études est à votre disposition pour analyser vos projets et répondre à vos appels d'offres.</p>
+          <p>Notre bureau d&apos;études est à votre disposition pour analyser vos projets et répondre à vos appels d&apos;offres.</p>
         </div>
       </section>
 
@@ -335,7 +335,7 @@ export default function ContactPage() {
               ) : (
                 <>
                   <div className="form-title">Formulaire de Contact</div>
-                  <p className="form-sub">Tous les champs marqués d'un astérisque sont obligatoires.</p>
+                  <p className="form-sub">Tous les champs marqués d&apos;un astérisque sont obligatoires.</p>
                   <form onSubmit={handleSubmit}>
                     <div className="form-row">
                       <div className="form-group">
