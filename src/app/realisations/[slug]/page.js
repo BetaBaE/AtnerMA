@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import SectionScrollBar from '@/components/layout/SectionScrollBar';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { contentfulClient } from '@/lib/contentful';
 import { GET_ALL_PROJECTS, GET_PROJECT_BY_SLUG } from '@/lib/queries';
@@ -16,6 +17,12 @@ export async function generateStaticParams() {
   const data = await contentfulClient.request(GET_ALL_PROJECTS);
   return data.projectCollection.items.map((item) => ({ slug: item.slug }));
 }
+
+const SECTIONS = [
+  { id: 'detail-hero',    label: 'Projet' },
+  { id: 'detail-content', label: 'Détails' },
+  { id: 'detail-cta',     label: 'Contact' },
+];
 
 export default async function ProjectDetailPage({ params }) {
   const { slug } = await params;
@@ -54,6 +61,7 @@ export default async function ProjectDetailPage({ params }) {
 
   return (
     <>
+      <SectionScrollBar sections={SECTIONS} />
       <style>{`
         .detail-hero {
           min-height: 380px;
@@ -204,7 +212,7 @@ export default async function ProjectDetailPage({ params }) {
       `}</style>
 
       {/* ── HERO ── */}
-      <section className="detail-hero" style={{ background: heroBg }}>
+      <section className="detail-hero" data-section="detail-hero" style={{ background: heroBg }}>
         <div className="detail-hero-inner">
           <Link href="/realisations" className="detail-back">
             ← Retour aux Réalisations
@@ -215,7 +223,7 @@ export default async function ProjectDetailPage({ params }) {
       </section>
 
       {/* ── CONTENT ── */}
-      <section className="section">
+      <section className="section" data-section="detail-content">
         <div className="container">
           <div className="detail-layout">
             {/* Main column */}
@@ -267,7 +275,7 @@ export default async function ProjectDetailPage({ params }) {
       </section>
 
       {/* ── CTA ── */}
-      <section className="section-dark" style={{ textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+      <section className="section-dark" data-section="detail-cta" style={{ textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'linear-gradient(90deg,#00a3ff,#0066cc)' }} />
         <div className="container">
           <span className="overline">Portfolio</span>

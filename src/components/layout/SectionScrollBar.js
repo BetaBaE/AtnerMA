@@ -3,12 +3,43 @@
 import { useEffect, useRef, useState } from 'react';
 
 const SECTION_THEME = {
+  // Accueil
   hero:         'dark',
   stats:        'light',
   activites:    'light',
   realisations: 'light',
-  clients:      'light',
-  contact:      'dark',
+  clients:      'dark',
+  cta:          'dark',
+
+  // Activités
+  'act-hero':         'dark',
+  'act-activites':    'light',
+  'act-methodologie': 'light',
+  'act-references':   'light',
+  'act-cta':          'dark',
+
+  // Contact
+  'contact-hero': 'dark',
+  'contact-form': 'light',
+  'contact-map':  'light',
+
+  // Qui Sommes-Nous
+  'qsn-hero':     'dark',
+  'qsn-histoire': 'dark',
+  'qsn-valeurs':  'light',
+  'qsn-certs':    'light',
+  'qsn-equipe':   'light',
+
+  // Réalisations
+  'real-hero':  'dark',
+  'real-grid':  'dark',
+  'real-phare': 'light',
+  'real-cta':   'dark',
+
+  // Project detail
+  'detail-hero':    'dark',
+  'detail-content': 'light',
+  'detail-cta':     'dark',
 };
 
 const GAP_PX = 10;
@@ -36,7 +67,7 @@ export default function SectionScrollBar({ sections }) {
       const scrollY = window.scrollY;
       const docH    = document.documentElement.scrollHeight - window.innerHeight;
       setProgress(docH > 0 ? scrollY / docH : 0);
-      const mid = scrollY + window.innerHeight / 2;
+      const mid = scrollY + window.innerHeight / 4;
       let found = 0;
       els.forEach((el, i) => { if (el && el.offsetTop <= mid) found = i; });
       setActive(found);

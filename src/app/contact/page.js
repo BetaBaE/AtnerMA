@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import SectionScrollBar from '@/components/layout/SectionScrollBar';
 
 const contactInfo = [
   {
@@ -47,6 +48,12 @@ const ContactIcon = ({ id }) => {
   return <svg {...p}><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="2.5" /></svg>;
 };
 
+const SECTIONS = [
+  { id: 'contact-hero', label: 'Contact' },
+  { id: 'contact-form', label: 'Formulaire' },
+  { id: 'contact-map',  label: 'Localisation' },
+];
+
 export default function ContactPage() {
   const [form, setForm] = useState({ nom: '', societe: '', telephone: '', email: '', objet: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
@@ -63,6 +70,7 @@ export default function ContactPage() {
 
   return (
     <>
+      <SectionScrollBar sections={SECTIONS} />
       <style>{`
         /* CONTACT LAYOUT */
         .contact-layout {
@@ -288,7 +296,7 @@ export default function ContactPage() {
       `}</style>
 
       {/* ── PAGE HERO ── */}
-      <section className="page-hero">
+      <section className="page-hero" data-section="contact-hero">
         <div className="page-hero-inner">
           <div className="page-hero-label">Contact</div>
           <h1>Contactez<br />ATNER</h1>
@@ -297,7 +305,7 @@ export default function ContactPage() {
       </section>
 
       {/* ── CONTACT LAYOUT ── */}
-      <section className="section">
+      <section className="section" data-section="contact-form">
         <div className="container">
           <div className="contact-layout">
             {/* Info column */}
@@ -436,7 +444,7 @@ export default function ContactPage() {
       </section>
 
       {/* ── MAP ── */}
-      <section className="section-surface">
+      <section className="section-surface" data-section="contact-map">
         <div className="container">
           <div className="section-header" style={{ marginBottom: '2rem' }}>
             <span className="overline">Localisation</span>

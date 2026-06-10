@@ -12,15 +12,21 @@ export default function VideoHero({ title, subtitle, ctaLabel }) {
   const playerRef = useRef(null);
 
   useEffect(() => {
-    // Load Vimeo Player SDK and connect to the iframe
+    if (!iframeRef.current) return;
+
     const script = document.createElement('script');
     script.src = 'https://player.vimeo.com/api/player.js';
     script.onload = () => {
+      if (!iframeRef.current) return;
       // eslint-disable-next-line no-undef
       playerRef.current = new Vimeo.Player(iframeRef.current);
     };
     document.body.appendChild(script);
-    return () => { document.body.removeChild(script); };
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
   }, []);
 
   function toggleMute() {

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getAllProjects } from '@/lib/api';
 import ProjectsClient from '@/components/realisations/ProjectsClient';
 import ScrollReveal from '@/components/layout/ScrollReveal';
+import SectionScrollBar from '@/components/layout/SectionScrollBar';
 
 const CATEGORY_BG = {
   Distribution: 'linear-gradient(135deg, #0a1628, #0d2040)',
@@ -26,8 +27,23 @@ export default async function RealisationsPage() {
 
   const featured = projects.find((p) => p.featured) ?? null;
 
+  const SECTIONS_BASE = [
+    { id: 'real-hero', label: 'Intro' },
+    { id: 'real-grid', label: 'Projets' },
+    { id: 'real-cta',  label: 'Contact' },
+  ];
+  const SECTIONS = featured
+    ? [
+        { id: 'real-hero',  label: 'Intro' },
+        { id: 'real-grid',  label: 'Projets' },
+        { id: 'real-phare', label: 'Phare' },
+        { id: 'real-cta',   label: 'Contact' },
+      ]
+    : SECTIONS_BASE;
+
   return (
     <>
+      <SectionScrollBar sections={SECTIONS} />
       <style>{`
         /* FILTER BAR */
         .filter-bar {
@@ -235,7 +251,7 @@ export default async function RealisationsPage() {
       `}</style>
 
       {/* ── PAGE HERO ── */}
-      <section className="page-hero">
+      <section className="page-hero" data-section="real-hero">
         <div className="page-hero-inner">
           <div className="page-hero-label">Portfolio</div>
           <h1>Nos Projets<br />Livrés</h1>
@@ -244,11 +260,13 @@ export default async function RealisationsPage() {
       </section>
 
       {/* ── FILTER + GRID (client — handles filter state) ── */}
-      <ProjectsClient projects={projects} />
+      <div data-section="real-grid">
+        <ProjectsClient projects={projects} />
+      </div>
 
       {/* ── PROJET PHARE ── */}
       {featured && (
-        <section className="section-surface">
+        <section className="section-surface" data-section="real-phare">
           <div className="container">
             <ScrollReveal>
               <div className="section-header">
@@ -296,7 +314,7 @@ export default async function RealisationsPage() {
       )}
 
       {/* ── CTA ── */}
-      <section className="section-dark" style={{ textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+      <section className="section-dark" data-section="real-cta" style={{ textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'linear-gradient(90deg,#00a3ff,#0066cc)' }} />
         <div className="container">
           <span className="overline">Bureau d&apos;Études</span>

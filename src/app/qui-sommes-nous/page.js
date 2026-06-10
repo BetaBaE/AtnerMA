@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getAllTeamMembers } from '@/lib/api';
 import HistoryTimeline from '@/components/qui-sommes-nous/HistoryTimeline';
 import ScrollReveal from '@/components/layout/ScrollReveal';
+import SectionScrollBar from '@/components/layout/SectionScrollBar';
 const values = [
   {
     id: 'qualite',
@@ -49,11 +50,20 @@ const certifications = [
   },
 ];
 
+const SECTIONS = [
+  { id: 'qsn-hero',     label: 'Intro' },
+  { id: 'qsn-histoire', label: 'Histoire' },
+  { id: 'qsn-valeurs',  label: 'Valeurs' },
+  { id: 'qsn-certs',    label: 'Certifs' },
+  { id: 'qsn-equipe',   label: 'Équipe' },
+];
+
 export default async function QuiSommesNousPage() {
   const team = await getAllTeamMembers();
   const departments = [...new Set(team.map((m) => m.department).filter(Boolean))];
   return (
     <>
+      <SectionScrollBar sections={SECTIONS} />
       <style>{`
         /* VALUES */
         .values-grid {
@@ -278,7 +288,7 @@ export default async function QuiSommesNousPage() {
       `}</style>
 
       {/* ── PAGE HERO ── */}
-      <section className="page-hero">
+      <section className="page-hero" data-section="qsn-hero">
         <div className="page-hero-inner">
           <div className="page-hero-label">Entreprise</div>
           <h1>ATNER —<br />Atlas Énergie</h1>
@@ -286,10 +296,12 @@ export default async function QuiSommesNousPage() {
         </div>
       </section>
 
-      <HistoryTimeline />
+      <div data-section="qsn-histoire">
+        <HistoryTimeline />
+      </div>
 
       {/* ── NOS VALEURS ── */}
-      <section className="section-surface">
+      <section className="section-surface" data-section="qsn-valeurs">
         <div className="container">
           <div className="section-header">
             <span className="overline">Ce qui nous guide</span>
@@ -311,7 +323,7 @@ export default async function QuiSommesNousPage() {
       </section>
 
       {/* ── HABILITATIONS ── */}
-      <section className="section">
+      <section className="section" data-section="qsn-certs">
         <div className="container">
           <div className="section-header">
             <span className="overline">Accréditations</span>
@@ -340,7 +352,7 @@ export default async function QuiSommesNousPage() {
       </section>
 
       {/* ── NOTRE ÉQUIPE ── */}
-      <section className="section-surface">
+      <section className="section-surface" data-section="qsn-equipe">
         <div className="container">
           <div className="section-header">
             <span className="overline">Notre Équipe</span>

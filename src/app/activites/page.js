@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getAllActivities } from '@/lib/api';
 import ActivityCard from '@/components/home/ActivityCard';
 import ScrollReveal from '@/components/layout/ScrollReveal';
+import SectionScrollBar from '@/components/layout/SectionScrollBar';
 
 const steps = [
   { num: '01', title: "Appel d'Offre", desc: "Analyse du dossier AO, visite de site, préparation de l'offre technique et financière, dépôt dans les délais." },
@@ -53,11 +54,20 @@ const ActivityIcon = ({ id }) => {
   return <svg {...p}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>;
 };
 
+const SECTIONS = [
+  { id: 'act-hero',         label: 'Intro' },
+  { id: 'act-activites',    label: 'Activités' },
+  { id: 'act-methodologie', label: 'Méthode' },
+  { id: 'act-references',   label: 'Références' },
+  { id: 'act-cta',          label: 'Contact' },
+];
+
 export default async function ActivitesPage() {
   const activities = await getAllActivities();
 
   return (
     <>
+      <SectionScrollBar sections={SECTIONS} />
       <style>{`
         /* ACTIVITY CARDS GRID */
         .act-full-grid {
@@ -238,7 +248,7 @@ export default async function ActivitesPage() {
       `}</style>
 
       {/* ── PAGE HERO ── */}
-      <section className="page-hero">
+      <section className="page-hero" data-section="act-hero">
         <div className="page-hero-inner">
           <div className="page-hero-label">Expertises</div>
           <h1>Nos Domaines<br />d&apos;Expertise</h1>
@@ -247,7 +257,7 @@ export default async function ActivitesPage() {
       </section>
 
       {/* ── ACTIVITÉS GRID ── */}
-      <section className="section">
+      <section className="section" data-section="act-activites">
         <div className="container">
           <ScrollReveal>
             <div className="section-header">
@@ -273,7 +283,7 @@ export default async function ActivitesPage() {
       </section>
 
       {/* ── MÉTHODOLOGIE ── */}
-      <section className="section-surface">
+      <section className="section-surface" data-section="act-methodologie">
         <div className="container">
           <div className="section-header">
             <span className="overline">Notre Process</span>
@@ -295,7 +305,7 @@ export default async function ActivitesPage() {
       </section>
 
       {/* ── RÉFÉRENCES ── */}
-      <section className="section">
+      <section className="section" data-section="act-references">
         <div className="container">
           <div className="section-header">
             <span className="overline">Marchés Publics</span>
@@ -315,7 +325,7 @@ export default async function ActivitesPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="section-dark" style={{ textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+      <section className="section-dark" data-section="act-cta" style={{ textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'linear-gradient(90deg,#00a3ff,#0066cc)' }} />
         <div className="container">
           <span className="overline">Projets Livrés</span>
