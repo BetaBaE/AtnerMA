@@ -305,7 +305,7 @@ export default async function QuiSommesNousPage() {
         <div className="container">
           <div className="section-header">
             <span className="overline">Ce qui nous guide</span>
-            <h2>Nos Valeurs</h2>
+            <h2>Nos Valeurs !</h2>
             <p>Quatre principes fondateurs qui orientent chacune de nos décisions techniques et relationnelles.</p>
           </div>
           <div className="values-grid">

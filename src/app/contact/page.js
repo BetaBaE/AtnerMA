@@ -451,15 +451,15 @@ export default function ContactPage() {
             <h2>Notre Siège — Rabat</h2>
           </div>
           <iframe
-            src="https://maps.google.com/maps?q=ATNER+Hay+Ryad+Rabat+Maroc&output=embed"
-            width="100%"
-            height="320"
-            style={{ border: 0, borderRadius: '8px' }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title="ATNER Hay Ryad Rabat Maroc"
-          />
+            src="https://maps.google.com/maps?q=33.9716,-6.8498&output=embed"
+              width="100%"
+              height="320"
+              style={{ border: 0, borderRadius: '8px' }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="ATNER Hay Ryad Rabat Maroc"
+            />
         </div>
       </section>
     </>

@@ -4,6 +4,7 @@ import Footer from '@/components/layout/Footer';
 import SmoothScroll from '@/components/layout/SmoothScroll';
 import PageTransition from '@/components/layout/PageTransition';
 import SiteIntro from '@/components/layout/SiteIntro';
+import SiteIntroLogo from '@/components/layout/SiteIntroLogo';
 import './globals.css';
 
 const barlow = Barlow({
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
     <html lang="fr" className={`${barlow.variable} ${barlowCondensed.variable}`}>
       <body suppressHydrationWarning className="intro-playing">
         <SiteIntro />
+        <SiteIntroLogo />
         <div id="page-content">
           <SmoothScroll>
             <Navbar />

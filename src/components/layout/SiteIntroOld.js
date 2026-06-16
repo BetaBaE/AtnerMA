@@ -3,6 +3,75 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
+function InvertCursor({ containerRef }) {
+  const circleRef = useRef(null);
+  const pos = useRef({ x: -200, y: -200 });
+  const cur = useRef({ x: -200, y: -200 });
+  const rafId = useRef(null);
+  const visible = useRef(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const circle    = circleRef.current;
+    if (!container || !circle) return;
+
+    function onMove(e) {
+      const rect = container.getBoundingClientRect();
+      pos.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      if (!visible.current) {
+        visible.current = true;
+        gsap.to(circle, { opacity: 1, duration: 0.3 });
+        // hide the system cursor while inside
+        container.style.cursor = 'none';
+      }
+    }
+
+    function onLeave() {
+      visible.current = false;
+      gsap.to(circle, { opacity: 0, duration: 0.25 });
+      container.style.cursor = '';
+    }
+
+    function loop() {
+      cur.current.x += (pos.current.x - cur.current.x) * 0.12;
+      cur.current.y += (pos.current.y - cur.current.y) * 0.12;
+      circle.style.transform = `translate(${cur.current.x}px, ${cur.current.y}px) translate(-50%, -50%)`;
+      rafId.current = requestAnimationFrame(loop);
+    }
+
+    container.addEventListener('mousemove', onMove);
+    container.addEventListener('mouseleave', onLeave);
+    rafId.current = requestAnimationFrame(loop);
+
+    return () => {
+      container.removeEventListener('mousemove', onMove);
+      container.removeEventListener('mouseleave', onLeave);
+      container.style.cursor = '';
+      cancelAnimationFrame(rafId.current);
+    };
+  }, [containerRef]);
+
+  return (
+    <div
+      ref={circleRef}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: 144,
+        height: 144,
+        borderRadius: '50%',
+        background: '#ffffff',
+        mixBlendMode: 'difference',
+        pointerEvents: 'none',
+        zIndex: 10,
+        opacity: 0,
+        willChange: 'transform',
+      }}
+    />
+  );
+}
+
 export default function SiteIntro() {
   const overlayRef = useRef(null);
   const yearRef = useRef(null);
@@ -81,7 +150,7 @@ export default function SiteIntro() {
     async function countTo(from, to) {
       return new Promise((resolve) => {
         const steps = Math.abs(to - from);
-        const duration = Math.max(600, steps * 18);
+        const duration = Math.max(600, steps * 14);
         const interval = duration / steps;
         let current = from;
         const tick = setInterval(() => {
@@ -114,7 +183,7 @@ export default function SiteIntro() {
         { opacity: 0, x: 20 },
         { opacity: 1, x: 0, duration: 0.4, delay: 0.1, ease: 'power2.out' }
       );
-      await new Promise((r) => setTimeout(r, 1500));
+      await new Promise((r) => setTimeout(r, 1200));
       if (cancelled) return;
       gsap.to(labelRef.current, { opacity: 0, duration: 0.25 });
       gsap.to(descRef.current, { opacity: 0, duration: 0.25 });
@@ -122,14 +191,18 @@ export default function SiteIntro() {
     }
 
     async function runIntro() {
-      // Fix 1: reveal year only after font is ready
+      // Reveal year only after font is ready
       if (yearRef.current) {
         yearRef.current.style.visibility = 'visible';
         yearRef.current.innerText = currentYear;
       }
-      // Fix 2: set initial image immediately so first period isn't blank
+      // Set initial image immediately so first period isn't blank
       if (layerARef.current) {
         layerARef.current.style.backgroundImage = 'url(/intro/load_LAST.jpg)';
+      }
+      // Start progress bar across total intro duration (~12s)
+      if (progressRef.current) {
+        gsap.to(progressRef.current, { width: '100%', duration: 12, ease: 'none' });
       }
       await countTo(currentYear, 2015);
       if (cancelled) return;
@@ -152,7 +225,6 @@ export default function SiteIntro() {
       await holdPeriod(4);
       if (cancelled) return;
 
-      gsap.to(progressRef.current, { width: '100%', duration: 0.4 });
       await new Promise((r) => setTimeout(r, 400));
       if (cancelled) return;
 
@@ -186,6 +258,9 @@ export default function SiteIntro() {
         overflow: 'hidden',
       }}
     >
+      {/* Inverted cursor */}
+      <InvertCursor containerRef={overlayRef} />
+
       {/* Image layer A — first image set by effect */}
       <div
         ref={layerARef}
@@ -310,6 +385,22 @@ export default function SiteIntro() {
         </div>
       </div>
 
+      {/* Bottom label */}
+      <div style={{
+        position: 'absolute',
+        bottom: '2rem',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 3,
+        fontSize: '0.65rem',
+        letterSpacing: '0.25em',
+        textTransform: 'uppercase',
+        color: 'rgba(255,255,255,0.3)',
+        whiteSpace: 'nowrap',
+      }}>
+        ATNER — HISTOIRE
+      </div>
+
       {/* Progress bar */}
       <div
         ref={progressRef}
@@ -320,7 +411,7 @@ export default function SiteIntro() {
           height: '2px',
           width: '0%',
           background: 'linear-gradient(90deg, #00a3ff, #0066cc)',
-          zIndex: 2,
+          zIndex: 3,
         }}
       />
     </div>

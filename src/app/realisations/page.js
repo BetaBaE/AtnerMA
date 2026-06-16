@@ -3,6 +3,7 @@ import { getAllProjects } from '@/lib/api';
 import ProjectsClient from '@/components/realisations/ProjectsClient';
 import ScrollReveal from '@/components/layout/ScrollReveal';
 import SectionScrollBar from '@/components/layout/SectionScrollBar';
+import ConstructionSite3D from '@/components/3d/ConstructionSite3DLazy';
 
 const CATEGORY_BG = {
   Distribution: 'linear-gradient(135deg, #0a1628, #0d2040)',
@@ -23,6 +24,7 @@ export default async function RealisationsPage() {
     year: item.year,
     featured: item.featured ?? false,
     coverImage: item.coverImage ?? null,
+    model : item.model ?? null
   }));
 
   const featured = projects.find((p) => p.featured) ?? null;
@@ -238,6 +240,15 @@ export default async function RealisationsPage() {
           color: #0a1628;
         }
 
+        /* FEATURED 3D MODEL VIEWER */
+        .featured-3d-wrap {
+          margin-top: 2.5rem;
+          height: 480px;
+          border-radius: 8px;
+          overflow: hidden;
+          border: 1px solid rgba(10,22,40,0.07);
+        }
+
         /* RESPONSIVE */
         @media (max-width: 1024px) {
           .proj-full-grid { grid-template-columns: repeat(2, 1fr); }
@@ -247,6 +258,7 @@ export default async function RealisationsPage() {
         @media (max-width: 640px) {
           .proj-full-grid { grid-template-columns: 1fr; }
           .filter-bar { gap: 0.4rem; }
+          .featured-3d-wrap { height: 320px; }
         }
       `}</style>
 
@@ -309,6 +321,19 @@ export default async function RealisationsPage() {
               </div>
             </div>
             </ScrollReveal>
+
+            {featured.model?.url && (
+              <ScrollReveal direction="left">
+                <div className="featured-3d-wrap">
+                  <ConstructionSite3D
+                    modelUrl={featured.model.url}
+                    title={featured.title}
+                    subtitle={`${featured.region} · ${featured.category}`}
+                    viewportHeight="100%"
+                  />
+                </div>
+              </ScrollReveal>
+            )}
           </div>
         </section>
       )}
