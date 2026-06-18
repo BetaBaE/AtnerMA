@@ -30,7 +30,7 @@ body.intro-playing {
 }
 
 body.intro-playing #page-content {
-    visibility: hidden;
+    visibility: hidden; 
 }
 
 html {

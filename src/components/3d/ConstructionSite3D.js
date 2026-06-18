@@ -551,7 +551,7 @@ export default function ConstructionSite3D({
           </div>
         </div>
 
-        <div style={{
+        {/* <div style={{
           background: "white", borderRadius: 8,
           padding: "8px 12px",
           boxShadow: "0 2px 12px rgba(0,0,0,0.3)",
@@ -559,13 +559,13 @@ export default function ConstructionSite3D({
           whiteSpace: "nowrap",
         }}>
           🏗️ <span style={{ fontWeight: 700, color: "#1a73e8" }}>3D Construction View</span>
-        </div>
+        </div> */}
       </div>
 
       {/* ── Compass ── */}
-      <div style={{
+      {/*<div style={{
         position: "absolute", top: 70, right: 14,
-        background: "white",
+        background: "white", 
         borderRadius: "50%",
         width: 48, height: 48,
         boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
@@ -575,7 +575,7 @@ export default function ConstructionSite3D({
       }}>
         <span style={{ color: "#EA4335", fontWeight: 900, fontSize: 18, lineHeight: 1 }}>▲</span>
         <span style={{ color: "#333", fontWeight: 700, fontSize: 11 }}>N</span>
-      </div>
+      </div> */}
 
       {/* ── Zoom controls ── */}
       <div style={{
@@ -603,22 +603,7 @@ export default function ConstructionSite3D({
       </div>
 
       {/* ── Layer toggle buttons ── */}
-      <div style={{
-        position: "absolute", bottom: 100, right: 14,
-        display: "flex", flexDirection: "column", gap: 6,
-      }}>
-        {["🛰️ Satellite", "📐 Terrain", "🚗 Traffic"].map(label => (
-          <div key={label} style={{
-            background: "white", borderRadius: 20,
-            padding: "6px 12px", fontSize: 11, color: "#444",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
-            cursor: "pointer", whiteSpace: "nowrap",
-            border: label.includes("Satellite") ? "2px solid #1a73e8" : "2px solid transparent",
-            fontWeight: label.includes("Satellite") ? 700 : 400,
-            color: label.includes("Satellite") ? "#1a73e8" : "#444",
-          }}>{label}</div>
-        ))}
-      </div>
+
 
       {/* ── Legend (demo mock-site mode only) ── */}
       {!modelUrl && (
@@ -663,6 +648,20 @@ export default function ConstructionSite3D({
         </div>
       )}
 
+      {/* ── Controls hint ── */}
+      <div style={{
+        position: "absolute", top: "50%", right: 14,
+        transform: "translateY(-50%)",
+        background: "rgba(32,33,36,0.8)",
+        borderRadius: 8, padding: "8px 10px",
+        fontSize: 10, color: "rgba(255,255,255,0.85)",
+        lineHeight: 1.8,
+        backdropFilter: "blur(4px)",
+      }}>
+        🖱️ Drag to rotate<br />
+        ⚙️ Scroll to zoom
+      </div>
+
       {/* ── Scale bar ── */}
       <div style={{
         position: "absolute", bottom: 14, right: 14,
@@ -681,20 +680,6 @@ export default function ConstructionSite3D({
         <div style={{ display: "flex", justifyContent: "space-between", width: 90, fontSize: 10, color: "#555" }}>
           <span>0</span><span>25m</span><span>50m</span>
         </div>
-      </div>
-
-      {/* ── Controls hint ── */}
-      <div style={{
-        position: "absolute", top: "50%", right: 14,
-        transform: "translateY(-50%)",
-        background: "rgba(32,33,36,0.8)",
-        borderRadius: 8, padding: "8px 10px",
-        fontSize: 10, color: "rgba(255,255,255,0.85)",
-        lineHeight: 1.8,
-        backdropFilter: "blur(4px)",
-      }}>
-        🖱️ Drag to rotate<br />
-        ⚙️ Scroll to zoom
       </div>
 
       {/* ── Google Maps bottom street-view bar ── */}

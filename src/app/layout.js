@@ -32,7 +32,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fr" className={`${barlow.variable} ${barlowCondensed.variable}`}>
-      <body suppressHydrationWarning className="intro-playing">
+      <body suppressHydrationWarning>
         <SiteIntro />
         <SiteIntroLogo />
         <div id="page-content">

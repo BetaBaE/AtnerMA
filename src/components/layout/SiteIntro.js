@@ -17,6 +17,12 @@ export default function SiteIntro() {
     const overlay = overlayRef.current;
     if (!overlay) return;
 
+    const last = localStorage.getItem('atner_intro_ts');
+    const thirtyMin = 30 * 60 * 1000;
+    const shouldShowFull = !last || (Date.now() - Number(last)) > thirtyMin;
+    if (!shouldShowFull) return;
+    localStorage.setItem('atner_intro_ts', Date.now().toString());
+
     // currentYear only computed on the client
     const currentYear = new Date().getFullYear();
 
