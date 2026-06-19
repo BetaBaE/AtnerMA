@@ -578,7 +578,7 @@ export default function ConstructionSite3D({
       </div> */}
 
       {/* ── Zoom controls ── */}
-      <div style={{
+      {/* <div style={{
         position: "absolute", top: 130, right: 14,
         background: "white",
         borderRadius: 8,
@@ -600,7 +600,7 @@ export default function ConstructionSite3D({
             padding: 0, lineHeight: 1,
           }}>{sym}</button>
         ))}
-      </div>
+      </div> */}
 
       {/* ── Layer toggle buttons ── */}
 
@@ -650,7 +650,7 @@ export default function ConstructionSite3D({
 
       {/* ── Controls hint ── */}
       <div style={{
-        position: "absolute", top: "50%", right: 14,
+        position: "absolute", top: "95%", right: 14,
         transform: "translateY(-50%)",
         background: "rgba(32,33,36,0.8)",
         borderRadius: 8, padding: "8px 10px",
@@ -663,7 +663,7 @@ export default function ConstructionSite3D({
       </div>
 
       {/* ── Scale bar ── */}
-      <div style={{
+      {/* <div style={{
         position: "absolute", bottom: 14, right: 14,
         background: "rgba(255,255,255,0.92)",
         borderRadius: 6,
@@ -680,10 +680,10 @@ export default function ConstructionSite3D({
         <div style={{ display: "flex", justifyContent: "space-between", width: 90, fontSize: 10, color: "#555" }}>
           <span>0</span><span>25m</span><span>50m</span>
         </div>
-      </div>
+      </div> */}
 
       {/* ── Google Maps bottom street-view bar ── */}
-      <div style={{
+      {/* <div style={{
         position: "absolute", bottom: 14, left: "50%",
         transform: "translateX(-50%)",
         background: "white", borderRadius: 24,
@@ -697,7 +697,7 @@ export default function ConstructionSite3D({
         <span>© 2026 Google</span>
         <span style={{ color: "#ccc" }}>|</span>
         <span style={{ cursor: "pointer", color: "#1a73e8" }}>Report</span>
-      </div>
+      </div> */}
     </div>
   );
 }

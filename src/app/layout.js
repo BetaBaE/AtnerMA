@@ -25,7 +25,7 @@ export const metadata = {
     'Leader national dans les services de l\'électricité, de l\'énergie et des travaux publics au Maroc.',
   icons: {
     icon: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
+    // apple: '/apple-touch-icon.png',
   },
 };
 

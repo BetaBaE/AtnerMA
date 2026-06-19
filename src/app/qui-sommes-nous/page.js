@@ -289,6 +289,7 @@ export default async function QuiSommesNousPage() {
 
       {/* ── PAGE HERO ── */}
       <section className="page-hero" data-section="qsn-hero">
+        <img src="/intro/load_1.jpg" alt="" className="page-hero-image" aria-hidden="true" />
         <div className="page-hero-inner">
           <div className="page-hero-label">Entreprise</div>
           <h1>ATNER —<br />Atlas Énergie</h1>

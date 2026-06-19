@@ -264,6 +264,7 @@ export default async function RealisationsPage() {
 
       {/* ── PAGE HERO ── */}
       <section className="page-hero" data-section="real-hero">
+        <img src="/hero imgs/projects_img.jpg" alt="" className="page-hero-image" aria-hidden="true" />
         <div className="page-hero-inner">
           <div className="page-hero-label">Portfolio</div>
           <h1>Nos Projets<br />Livrés</h1>

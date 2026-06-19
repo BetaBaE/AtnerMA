@@ -21,8 +21,8 @@ export default function Navbar() {
     const onScroll = () => {
       const y = window.scrollY;
       // Show navbar only after user scrolls past 80% of viewport height
-      setVisible(y > window.innerHeight * 0.8);
-      setScrolled(y > window.innerHeight * 0.8 + 40);
+      setVisible(y > window.innerHeight * 0.5);
+      setScrolled(y > window.innerHeight * 0.5 + 40);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);

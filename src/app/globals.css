@@ -144,17 +144,46 @@ h4 {
 
 /* Page hero (inner pages) */
 .page-hero {
-    padding: 8rem 2.5rem 4.5rem;
-    background:
-        radial-gradient(circle at 20% 80%, rgba(0, 163, 255, 0.07) 0%, transparent 50%),
-        var(--navy);
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    padding: 7rem 2.5rem 4rem;
     position: relative;
     overflow: hidden;
+    background: linear-gradient(135deg, #0a1628 60%, #5f99f6 90%);
+}
+
+/* Image on the right side, faded */
+.page-hero-image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 75%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.32;
+    mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 20%, rgba(0,0,0,1) 55%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 20%, rgba(0,0,0,1) 55%);
+}
+
+/* Left gradient overlay to ensure text is readable */
+.page-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #0a1628 30%, rgba(10,22,40,0.6) 55%, transparent 75%);
+    z-index: 1;
+    pointer-events: none;
 }
 
 .page-hero-inner {
-    max-width: var(--max-width);
-    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0;
+    width: 100%;
+    max-width: 560px;
 }
 
 .page-hero-label {
@@ -299,6 +328,16 @@ h4 {
 
     .section-header h2 {
         font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-hero-image {
+        width: 100%;
+        opacity: 0.15;
+    }
+    .page-hero::before {
+        background: linear-gradient(to right, #0a1628 50%, transparent 90%);
     }
 }
 

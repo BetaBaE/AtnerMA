@@ -297,6 +297,7 @@ export default function ContactPage() {
 
       {/* ── PAGE HERO ── */}
       <section className="page-hero" data-section="contact-hero">
+        <img src="/hero imgs/contact.jpg" alt="" className="page-hero-image" aria-hidden="true" />
         <div className="page-hero-inner">
           <div className="page-hero-label">Contact</div>
           <h1>Contactez<br />ATNER</h1>
@@ -451,7 +452,7 @@ export default function ContactPage() {
             <h2>Notre Siège — Rabat</h2>
           </div>
           <iframe
-            src="https://maps.google.com/maps?q=33.9716,-6.8498&output=embed"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d230.34684344818953!2d-6.8661778664343665!3d33.97103272439246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda76d1fff27286d%3A0xd2f27f04d5644fd7!2sATNER%20%5BAtlas%20%C3%89nergie%5D!5e0!3m2!1sen!2sma!4v1781866624110!5m2!1sen!2sma"
               width="100%"
               height="320"
               style={{ border: 0, borderRadius: '8px' }}
