@@ -366,8 +366,17 @@ export default async function QuiSommesNousPage() {
               <div className="team-grid">
                 {team.filter((m) => m.department === dept).map((m) => (
                   <div className="team-card" key={m.sys.id}>
-                    {m.photo?.url && (
+                    {m.photo?.url ? (
                       <img className="team-photo" src={m.photo.url} alt={m.photo.title ?? m.name} width={72} height={72} />
+                    ) : (
+                      <img
+                        src="/user.ico"
+                        alt="Membre de l'équipe"
+                        className="team-photo"
+                        width={64}
+                        height={64}
+                        style={{ objectFit: 'cover' }}
+                      />
                     )}
                     <div className="team-card-header">
                       <div className="team-title">{m.name}</div> 

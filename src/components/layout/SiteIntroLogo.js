@@ -53,7 +53,7 @@ export default function SiteIntroLogo() {
       }}
     >
       <Image
-        src="/LOGO_Rev.png"
+        src="/favicon.ico"
         alt="ATNER"
         width={72}
         height={72}

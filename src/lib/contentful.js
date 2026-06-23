@@ -6,4 +6,8 @@ export const contentfulClient = new GraphQLClient(endpoint, {
   headers: {
     Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
   },
+  fetch: (url, options) => fetch(url, {
+    ...options,
+    cache: 'no-store',
+  }),
 });

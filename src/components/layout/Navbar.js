@@ -219,7 +219,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="navbar-logo">
             <Image
-              src="/LOGO_Rev.png"
+              src="/favicon.ico"
               alt="ATNER Logo"
               width={36}
               height={36}

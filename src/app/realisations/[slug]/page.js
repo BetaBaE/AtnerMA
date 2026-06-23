@@ -126,7 +126,7 @@ export default async function ProjectDetailPage({ params }) {
         /* CONTENT LAYOUT */
         .detail-layout {
           display: grid;
-          grid-template-columns: 1fr 320px;
+          grid-template-columns: 1fr;
           gap: 3.5rem;
           align-items: start;
         }
@@ -178,32 +178,7 @@ export default async function ProjectDetailPage({ params }) {
           line-height: 1.75;
         }
 
-        /* SIDEBAR */
-        .detail-sidebar { position: sticky; top: 100px; }
-        .detail-sidebar-card {
-          background: #0a1628;
-          border-radius: 8px;
-          padding: 2rem;
-          color: #ffffff;
-        }
-        .detail-sidebar-title {
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: 1.1rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.04em;
-          margin-bottom: 0.75rem;
-        }
-        .detail-sidebar-body {
-          font-size: 0.88rem;
-          color: rgba(255,255,255,0.55);
-          line-height: 1.7;
-          margin-bottom: 1.5rem;
-        }
-
         @media (max-width: 1024px) {
-          .detail-layout { grid-template-columns: 1fr; }
-          .detail-sidebar { position: static; }
           .detail-hero { padding: 4rem 1.25rem 2.5rem; }
         }
         @media (max-width: 640px) {
@@ -254,22 +229,6 @@ export default async function ProjectDetailPage({ params }) {
               )}
             </div>
 
-            {/* Sidebar */}
-            <div className="detail-sidebar">
-              <div className="detail-sidebar-card">
-                <div className="detail-sidebar-title">Projet similaire ?</div>
-                <p className="detail-sidebar-body">
-                  Vous avez un projet d&apos;infrastructure électrique ou énergétique ? Notre bureau d&apos;études vous répond sous 48h.
-                </p>
-                <Link
-                  href="/contact"
-                  className="btn btn-primary"
-                  style={{ width: '100%', textAlign: 'center', display: 'block' }}
-                >
-                  Nous Contacter
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </section>

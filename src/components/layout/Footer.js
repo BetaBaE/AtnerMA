@@ -213,7 +213,7 @@ export default function Footer() {
             <div className="footer-brand">
               <Link href="/" className="footer-logo">
                 <Image
-                  src="/LOGO_Rev.png"
+                  src="/favicon.ico"
                   alt="ATNER"
                   width={30}
                   height={30}
