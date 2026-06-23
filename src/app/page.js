@@ -61,6 +61,7 @@ export default async function HomePage() {
     category: item.category,
     region: item.region,
     client: item.client,
+    model: item.model ?? null,
     thumbBg: item.coverImage
       ? `url(${item.coverImage.url}) center/cover no-repeat`
       : (CATEGORY_BG[item.category] ?? 'linear-gradient(135deg, #0a1628, #162540)'),
@@ -94,7 +95,7 @@ export default async function HomePage() {
           width: 46px;
           height: 46px;
           background: linear-gradient(135deg, #00a3ff, #0066cc);
-          clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -160,6 +161,17 @@ export default async function HomePage() {
           background: rgba(0,163,255,0.9);
           color: #ffffff;
           padding: 0.25rem 0.65rem;
+          border-radius: 3px;
+          backdrop-filter: blur(4px);
+        }
+        .proj-3d-badge {
+          font-size: 0.62rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          background: #16a34a;
+          color: #ffffff;
+          padding: 0.22rem 0.6rem;
           border-radius: 3px;
           backdrop-filter: blur(4px);
         }
@@ -328,6 +340,9 @@ export default async function HomePage() {
                 <Link href={`/realisations/${p.slug}`} className="proj-card">
                   <div className="proj-thumb" style={{ background: p.thumbBg }}>
                     <span className="proj-badge">{p.category}</span>
+                    {p.model?.url && (
+                      <span className="proj-3d-badge">Modèle 3D</span>
+                    )}
                   </div>
                   <div className="proj-body">
                     <div className="proj-title">{p.title}</div>
@@ -373,13 +388,11 @@ export default async function HomePage() {
       {/* ── CTA ── */}
       <section className="cta-band" data-section="contact">
         <div className="container">
-          <ScrollReveal direction="scale">
-            <div className="cta-title">Discutons de votre Projet</div>
-            <p className="cta-sub">
-              Notre Bureau d&apos;Études vous accompagne de la phase AO jusqu&apos;à la réception définitive.
-            </p>
-            <Link href="/contact" className="btn btn-primary">Contactez notre Bureau d&apos;Études</Link>
-          </ScrollReveal>
+          <div className="cta-title">Discutons de votre Projet</div>
+          <p className="cta-sub">
+            Notre Bureau d&apos;Études vous accompagne de la phase AO jusqu&apos;à la réception définitive.
+          </p>
+          <Link href="/contact" className="btn btn-primary">Contactez notre Bureau d&apos;Études</Link>
         </div>
       </section>
     </>

@@ -126,6 +126,17 @@ export default async function RealisationsPage() {
           color: rgba(255,255,255,0.75);
           letter-spacing: 0.08em;
         }
+        .proj-3d-badge {
+          font-size: 0.62rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          background: #16a34a;
+          color: #ffffff;
+          padding: 0.22rem 0.6rem;
+          border-radius: 3px;
+          backdrop-filter: blur(4px);
+        }
         .proj-full-body { padding: 1.5rem; }
         .proj-full-title {
           font-family: 'Barlow Condensed', sans-serif;
@@ -285,7 +296,7 @@ export default async function RealisationsPage() {
               <div className="section-header">
                 <span className="overline">Projet Phare</span>
                 <h2>Réalisation en Vedette</h2>
-                <p>Un projet représentatif de notre savoir-faire technique et de notre capacité d&apos;organisation.</p>
+                <p>Un projet représentatif de notre savoir-faire technique et de notre capacité d&apos;organisation. (Modéle 3D)</p>
               </div>
             </ScrollReveal>
             <ScrollReveal direction="left">

@@ -331,6 +331,16 @@ export default function ProjectsClient({ projects }) {
           transition: color 0.2s, transform 0.2s;
         }
         .pc-item:hover .pc-arrow { color: #fff; transform: translateX(5px); }
+        .proj-3d-badge {
+          font-size: 0.56rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          background: #16a34a;
+          color: #ffffff;
+          padding: 0.18rem 0.5rem;
+          border-radius: 2px;
+        }
         .pc-empty {
           padding: 4rem 0;
           color: rgba(255,255,255,0.22);
@@ -384,6 +394,9 @@ export default function ProjectsClient({ projects }) {
                     </div>
                     <div className="pc-item-right">
                       {p.category && <span className="pc-item-badge">{p.category}</span>}
+                      {p.model?.url && (
+                        <span className="proj-3d-badge">Modèle 3D</span>
+                      )}
                       <span className="pc-arrow">→</span>
                     </div>
                   </div>

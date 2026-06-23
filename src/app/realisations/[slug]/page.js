@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SectionScrollBar from '@/components/layout/SectionScrollBar';
+import ConstructionSite3DLazy from '@/components/3d/ConstructionSite3DLazy';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { contentfulClient } from '@/lib/contentful';
 import { GET_ALL_PROJECTS, GET_PROJECT_BY_SLUG } from '@/lib/queries';
@@ -44,6 +45,7 @@ export default async function ProjectDetailPage({ params }) {
     specs: raw.specs?.json ?? null,
     featured: raw.featured ?? false,
     coverImage: raw.coverImage ?? null,
+    model: raw.model ?? null,
   };
 
   const heroBg = project.coverImage
@@ -191,9 +193,25 @@ export default async function ProjectDetailPage({ params }) {
         <div className="detail-hero-inner">
           <Link href="/realisations" className="detail-back">
             ← Retour aux Réalisations
-          </Link> 
+          </Link>
           <h1 className="detail-title">{project.title}</h1>
           <div className="detail-badge">{project.category}</div>
+          {project.model?.url && (
+            <span style={{
+              display: 'inline-block',
+              fontSize: '0.65rem',
+              fontWeight: 700,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              background: '#16a34a',
+              color: '#ffffff',
+              padding: '0.3rem 0.8rem',
+              borderRadius: '3px',
+              marginLeft: '0.5rem',
+            }}>
+              Modèle 3D
+            </span>
+          )}
         </div>
       </section>
 
@@ -230,6 +248,60 @@ export default async function ProjectDetailPage({ params }) {
             </div>
 
           </div>
+        </div>
+      </section>
+
+      {/* ── 3D MODEL ── */}
+      <section className="section-surface">
+        <div className="container">
+          <div className="section-header">
+            <span className="overline">Visualisation</span>
+            <h2>Modèle 3D du Projet</h2>
+          </div>
+          {project.model?.url ? (
+            <div style={{ borderRadius: '8px', overflow: 'hidden', height: '500px' }}>
+              <ConstructionSite3DLazy
+                modelUrl={project.model.url}
+                title={project.title}
+                subtitle={`${project.region} · ${project.year}`}
+                viewportHeight="500px"
+              />
+            </div>
+          ) : (
+            <div style={{
+              height: '320px',
+              background: '#f0f4f8',
+              border: '2px dashed rgba(10,22,40,0.12)',
+              borderRadius: '8px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '1rem',
+              color: 'rgba(10,22,40,0.3)',
+            }}>
+              <svg viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" strokeWidth="1.5"
+                   strokeLinecap="round" strokeLinejoin="round"
+                   width="48" height="48">
+                <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+              <div style={{
+                fontFamily: "'Barlow Condensed', sans-serif",
+                fontSize: '1rem',
+                fontWeight: 600,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}>
+                Aucun modèle 3D disponible
+              </div>
+              <div style={{ fontSize: '0.82rem' }}>
+                Le modèle 3D de ce projet n&apos;a pas encore été ajouté.
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

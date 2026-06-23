@@ -145,7 +145,7 @@ export default async function QuiSommesNousPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+          border-radius: 50%;
           flex-shrink: 0;
         }
         .cert-hex svg {

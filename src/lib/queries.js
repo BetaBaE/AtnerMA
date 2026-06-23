@@ -137,6 +137,11 @@ export const GET_PROJECT_BY_SLUG = gql`
           width
           height
         }
+        model {
+          url
+          contentType
+          fileName
+        }
       }
     }
   }

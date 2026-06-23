@@ -104,7 +104,7 @@ export default function ContactPage() {
           width: 40px;
           height: 40px;
           background: #0a1628;
-          clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -221,7 +221,7 @@ export default function ContactPage() {
           width: 72px;
           height: 72px;
           background: linear-gradient(135deg, #00a3ff, #0066cc);
-          clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
