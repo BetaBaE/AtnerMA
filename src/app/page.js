@@ -7,6 +7,7 @@ import ActivityCard from '@/components/home/ActivityCard';
 import ScrollReveal from '@/components/layout/ScrollReveal';
 import VideoHero from '@/components/home/VideoHero';
 import SectionScrollBar from '@/components/layout/SectionScrollBar';
+import ClientsMarqueeWrapper from '@/components/home/ClientsMarqueeWrapper';
 
 const SECTIONS = [
   { id: 'hero',         label: 'Accueil' },
@@ -25,12 +26,12 @@ const CATEGORY_BG = {
 };
 
 const clients = [
-  { name: 'ONEE', full: "Office National de l'Eau et de l'Électricité" },
-  { name: 'RADEEJ', full: 'Régie Autonome de Distribution Eau et Électricité' },
-  { name: 'JESA', full: 'Jacobs Engineering SA' },
-  { name: 'Min. Équipement', full: "Ministère de l'Équipement et de l'Eau" },
-  { name: 'Communes', full: 'Collectivités Territoriales' },
-  { name: 'ONEP', full: "Office National de l'Eau Potable" },
+  { name: 'ONEE',           full: "Office National de l'Eau et de l'Électricité",    logo: '/images/clients/onee.png' },
+  { name: 'RADEEJ',         full: 'Régie Autonome de Distribution Eau et Électricité', logo: '/images/clients/radeej.png' },
+  { name: 'JESA',           full: 'Jacobs Engineering SA',                             logo: '/images/clients/jesa.png' },
+  { name: 'Min. Équipement',full: "Ministère de l'Équipement et de l'Eau",            logo: '/images/clients/min_equip.png' },
+  { name: 'Communes',       full: 'Collectivités Territoriales',                       logo: '/images/clients/communes.png' },
+  { name: 'ONEP',           full: "Office National de l'Eau Potable",                 logo: '/images/clients/onep.png' },
 ];
 
 const ActivityIcon = ({ id }) => {
@@ -195,29 +196,6 @@ export default async function HomePage() {
           flex-shrink: 0;
         }
 
-        /* Client pills */
-        .clients-row {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.85rem;
-          justify-content: center;
-        }
-        .client-pill {
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: 0.92rem;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: #0a1628;
-          padding: 0.65rem 1.5rem;
-          border: 1.5px solid rgba(10,22,40,0.1);
-          border-radius: 4px;
-          background: #ffffff;
-          transition: border-color 0.2s, color 0.2s;
-          cursor: default;
-        }
-        .client-pill:hover { border-color: #00a3ff; color: #00a3ff; }
-
         /* CTA band */
         .cta-band {
           background: linear-gradient(135deg, #0a1628 0%, #0e2340 100%);
@@ -363,13 +341,7 @@ export default async function HomePage() {
             <h2>Nos Clients Publics</h2>
             <p>Nous travaillons aux côtés des grands donneurs d&apos;ordres publics du Royaume.</p>
           </div>
-          <ScrollReveal direction="up">
-            <div className="clients-row">
-              {clients.map((c) => (
-                <div className="client-pill" key={c.name} title={c.full}>{c.name}</div>
-              ))}
-            </div>
-          </ScrollReveal>
+          <ClientsMarqueeWrapper clients={clients} />
         </div>
       </section>
 
