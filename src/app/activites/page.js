@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { getAllActivities } from '@/lib/api';
-import ActivityCard from '@/components/home/ActivityCard';
 import ScrollReveal from '@/components/layout/ScrollReveal';
 import SectionScrollBar from '@/components/layout/SectionScrollBar';
+import ActivitiesCarousel from '@/components/activites/ActivitiesCarousel';
 
 const steps = [
   { num: '01', title: "Appel d'Offre", desc: "Analyse du dossier AO, visite de site, préparation de l'offre technique et financière, dépôt dans les délais." },
@@ -62,19 +62,15 @@ const SECTIONS = [
   { id: 'act-cta',          label: 'Contact' },
 ];
 
-export default async function ActivitesPage() {
+export default async function ActivitesPage({ searchParams }) {
+  const { highlight } = await searchParams;
   const activities = await getAllActivities();
 
   return (
     <>
       <SectionScrollBar sections={SECTIONS} />
       <style>{`
-        /* ACTIVITY CARDS GRID */
-        .act-full-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1.25rem;
-        }
+        /* ACTIVITY CARDS */
         .act-full-card {
           background: #ffffff;
           border: 1px solid rgba(10,22,40,0.07);
@@ -237,13 +233,12 @@ export default async function ActivitesPage() {
 
         /* RESPONSIVE */
         @media (max-width: 1024px) {
-          .act-full-grid { grid-template-columns: repeat(2, 1fr); }
           .refs-grid { grid-template-columns: repeat(2, 1fr); }
           .method-flow { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
           .method-flow::before { display: none; }
         }
         @media (max-width: 640px) {
-          .act-full-grid, .refs-grid, .method-flow { grid-template-columns: 1fr; }
+          .refs-grid, .method-flow { grid-template-columns: 1fr; }
         }
       `}</style>
 
@@ -267,19 +262,7 @@ export default async function ActivitesPage() {
               <p>De la distribution haute tension au solaire photovoltaïque, nos équipes maîtrisent l&apos;intégralité des métiers de l&apos;énergie.</p>
             </div>
           </ScrollReveal>
-          <div className="act-full-grid">
-            {activities.map((a, i) => (
-              <ScrollReveal key={a.slug} delay={i * 0.1}>
-              <ActivityCard
-                activity={a}
-                id={a.slug}
-                icon={<ActivityIcon id={a.icon} />}
-                classPrefix="act-full"
-                showArrow={false}
-              />
-              </ScrollReveal>
-            ))}
-          </div>
+          <ActivitiesCarousel activities={activities} highlightSlug={highlight} />
         </div>
       </section>
 

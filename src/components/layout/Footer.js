@@ -15,11 +15,11 @@ const footerLinks = [
   {
     heading: 'Activités',
     links: [
-      { label: 'Distribution HTA/HTB/BT', href: '/activites#distribution' },
-      { label: 'Éclairage Public', href: '/activites#eclairage' },
-      { label: 'Solaire Photovoltaïque', href: '/activites#solaire' },
-      { label: 'Postes de Transformation', href: '/activites#postes' },
-      { label: 'VRD & Génie Civil', href: '/activites#genie-civil' },
+      { label: 'Distribution HTA/HTB/BT', href: '/activites?highlight=distribution' },
+      { label: 'Éclairage Public',         href: '/activites?highlight=eclairage' },
+      { label: 'Solaire Photovoltaïque',   href: '/activites?highlight=solaire' },
+      { label: 'Postes de Transformation', href: '/activites?highlight=postes' },
+      { label: 'VRD & Génie Civil',        href: '/activites?highlight=genie-civil' },
     ],
   },
 ];
