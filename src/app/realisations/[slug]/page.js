@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SectionScrollBar from '@/components/layout/SectionScrollBar';
 import ConstructionSite3DLazy from '@/components/3d/ConstructionSite3DLazy';
+import Badge3D from '@/components/Badge3D';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { contentfulClient } from '@/lib/contentful';
 import { GET_ALL_PROJECTS, GET_PROJECT_BY_SLUG } from '@/lib/queries';
@@ -196,22 +197,7 @@ export default async function ProjectDetailPage({ params }) {
           </Link>
           <h1 className="detail-title">{project.title}</h1>
           <div className="detail-badge">{project.category}</div>
-          {project.model?.url && (
-            <span style={{
-              display: 'inline-block',
-              fontSize: '0.65rem',
-              fontWeight: 700,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              background: '#16a34a',
-              color: '#ffffff',
-              padding: '0.3rem 0.8rem',
-              borderRadius: '3px',
-              marginLeft: '0.5rem',
-            }}>
-              Modèle 3D
-            </span>
-          )}
+          {project.model?.url && <Badge3D variant="dark" style={{ marginLeft: '30px' }} />}
         </div>
       </section>
 

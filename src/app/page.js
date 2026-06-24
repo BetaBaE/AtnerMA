@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getSiteConfig, getAllActivities, getFeaturedProjects } from '@/lib/api';
+import Badge3D from '@/components/Badge3D';
 import StatsCounter from '@/components/home/StatsCounter';
 import YearIntro from '@/components/home/YearIntro';
 import ActivityCard from '@/components/home/ActivityCard';
@@ -163,18 +164,6 @@ export default async function HomePage() {
           padding: 0.25rem 0.65rem;
           border-radius: 3px;
           backdrop-filter: blur(4px);
-        }
-        .proj-3d-badge {
-          display: inline-block;
-          font-size: 0.65rem;
-          font-weight: 800;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          background: transparent;
-          color: #D4A017;
-          border: 2px solid #D4A017;
-          padding: 0.22rem 0.65rem;
-          border-radius: 3px;
         }
         .proj-body { padding: 1.5rem; background: #ffffff; }
         .proj-title {
@@ -341,9 +330,7 @@ export default async function HomePage() {
                 <Link href={`/realisations/${p.slug}`} className="proj-card">
                   <div className="proj-thumb" style={{ background: p.thumbBg }}>
                     <span className="proj-badge">{p.category}</span>
-                    {p.model?.url && (
-                      <span className="proj-3d-badge">3D</span>
-                    )}
+                    {p.model?.url && <Badge3D variant="light" style={{ marginLeft: '30px' }} />}
                   </div>
                   <div className="proj-body">
                     <div className="proj-title">{p.title}</div>

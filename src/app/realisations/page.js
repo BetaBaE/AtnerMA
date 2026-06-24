@@ -126,18 +126,6 @@ export default async function RealisationsPage() {
           color: rgba(255,255,255,0.75);
           letter-spacing: 0.08em;
         }
-        .proj-3d-badge {
-          display: inline-block;
-          font-size: 0.65rem;
-          font-weight: 800;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          background: transparent;
-          color: #D4A017;
-          border: 2px solid #D4A017;
-          padding: 0.22rem 0.65rem;
-          border-radius: 3px;
-        }
         .proj-full-body { padding: 1.5rem; }
         .proj-full-title {
           font-family: 'Barlow Condensed', sans-serif;

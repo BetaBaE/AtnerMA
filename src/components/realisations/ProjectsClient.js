@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import Badge3D from '@/components/Badge3D';
 import { useRouter } from 'next/navigation';
 import { usePageTransitionLink } from '@/components/layout/PageTransition';
 
@@ -331,18 +332,6 @@ export default function ProjectsClient({ projects }) {
           transition: color 0.2s, transform 0.2s;
         }
         .pc-item:hover .pc-arrow { color: #fff; transform: translateX(5px); }
-        .proj-3d-badge {
-          display: inline-block;
-          font-size: 0.65rem;
-          font-weight: 800;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          background: transparent;
-          color: #D4A017;
-          border: 2px solid #D4A017;
-          padding: 0.22rem 0.65rem;
-          border-radius: 3px;
-        }
         .pc-empty {
           padding: 4rem 0;
           color: rgba(255,255,255,0.22);
@@ -395,9 +384,7 @@ export default function ProjectsClient({ projects }) {
                       </div>
                     </div>
                     <div className="pc-item-right">
-                      {p.model?.url && (
-                        <span className="proj-3d-badge">3D</span>
-                      )}
+                      {p.model?.url && <Badge3D variant="dark" style={{ marginLeft: '30px' }} />}
                       {p.category && <span className="pc-item-badge">{p.category}</span>}
                       <span className="pc-arrow">→</span>
                     </div>
