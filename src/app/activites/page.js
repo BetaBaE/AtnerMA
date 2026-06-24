@@ -175,6 +175,11 @@ export default async function ActivitesPage({ searchParams }) {
           font-weight: 800;
           color: #00a3ff;
           letter-spacing: 0.05em;
+          transition: transform 0.22s ease;
+        }
+        .method-num-wrap:hover .method-num {
+          border: 2px solid rgba(10,22,40,0.15);
+          transform: scale(1.08);
         }
         .method-title {
           font-family: 'Barlow Condensed', sans-serif;

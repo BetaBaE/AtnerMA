@@ -114,9 +114,12 @@ export default function ActivitiesCarousel({ activities, highlightSlug }) {
           width: 100%;
         }
         .carousel-viewport {
-          overflow: hidden;
+          overflow-x: hidden;
+          overflow-y: visible;
           flex: 1;
           min-width: 0;
+          padding-top: 8px;
+          padding-bottom: 8px;
         }
         .carousel-track {
           display: flex;
