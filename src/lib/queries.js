@@ -50,10 +50,16 @@ export const GET_ALL_PROJECTS = gql`
           width
           height
         }
-        model { 
-          url 
-          contentType 
-          fileName 
+        model {
+          url
+          contentType
+          fileName
+        }
+        gallery: galleryCollection(limit: 10) {
+          items {
+            url
+            title
+          }
         }
       }
     }
@@ -79,10 +85,16 @@ export const GET_FEATURED_PROJECTS = gql`
           width
           height
         }
-        model { 
-          url 
-          contentType 
-          fileName 
+        model {
+          url
+          contentType
+          fileName
+        }
+        gallery: galleryCollection(limit: 10) {
+          items {
+            url
+            title
+          }
         }
       }
     }
@@ -141,6 +153,12 @@ export const GET_PROJECT_BY_SLUG = gql`
           url
           contentType
           fileName
+        }
+        gallery: galleryCollection(limit: 10) {
+          items {
+            url
+            title
+          }
         }
       }
     }

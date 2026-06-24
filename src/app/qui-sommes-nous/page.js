@@ -258,10 +258,11 @@ export default async function QuiSommesNousPage() {
           margin-bottom: 1.25rem;
         }
         .team-photo {
-          width: 64px;
-          height: 64px;
+          width: 88px;
+          height: 88px;
           border-radius: 50%;
           object-fit: cover;
+          object-position: center top;
           display: block;
           margin: 0 auto 1rem;
         }
@@ -367,15 +368,14 @@ export default async function QuiSommesNousPage() {
                 {team.filter((m) => m.department === dept).map((m) => (
                   <div className="team-card" key={m.sys.id}>
                     {m.photo?.url ? (
-                      <img className="team-photo" src={m.photo.url} alt={m.photo.title ?? m.name} width={72} height={72} />
+                      <img className="team-photo" src={m.photo.url} alt={m.photo.title ?? m.name} width={88} height={88} />
                     ) : (
                       <img
-                        src="/user.ico"
+                        src="/account.png"
                         alt="Membre de l'équipe"
                         className="team-photo"
-                        width={64}
-                        height={64}
-                        style={{ objectFit: 'cover' }}
+                        width={88}
+                        height={88}
                       />
                     )}
                     <div className="team-card-header">

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import SectionScrollBar from '@/components/layout/SectionScrollBar';
 import ConstructionSite3DLazy from '@/components/3d/ConstructionSite3DLazy';
 import Badge3D from '@/components/Badge3D';
+import BackButton from '@/components/realisations/BackButton';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { contentfulClient } from '@/lib/contentful';
 import { GET_ALL_PROJECTS, GET_PROJECT_BY_SLUG } from '@/lib/queries';
@@ -64,6 +65,7 @@ export default async function ProjectDetailPage({ params }) {
 
   return (
     <>
+      <BackButton href="/realisations" label="Retour aux Réalisations" />
       <SectionScrollBar sections={SECTIONS} />
       <style>{`
         .detail-hero {
@@ -89,20 +91,6 @@ export default async function ProjectDetailPage({ params }) {
           margin: 0 auto;
           width: 100%;
         }
-        .detail-back {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.4rem;
-          font-size: 0.75rem;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: rgba(255,255,255,0.6);
-          text-decoration: none;
-          margin-bottom: 1.5rem;
-          transition: color 0.2s;
-        }
-        .detail-back:hover { color: #ffffff; }
         .detail-badge {
           display: inline-block;
           font-size: 0.65rem;
@@ -192,9 +180,6 @@ export default async function ProjectDetailPage({ params }) {
       {/* ── HERO ── */}
       <section className="detail-hero" data-section="detail-hero" style={{ background: heroBg }}>
         <div className="detail-hero-inner">
-          <Link href="/realisations" className="detail-back">
-            ← Retour aux Réalisations
-          </Link>
           <h1 className="detail-title">{project.title}</h1>
           <div className="detail-badge">{project.category}</div>
           {project.model?.url && <Badge3D variant="dark" style={{ marginLeft: '30px' }} />}
