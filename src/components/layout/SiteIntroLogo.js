@@ -53,10 +53,10 @@ export default function SiteIntroLogo() {
       }}
     >
       <Image
-        src="/favicon.ico"
+        src="/LOGO_rev.png"
         alt="ATNER"
-        width={72}
-        height={72}
+        width={150}
+        height={150}
         style={{ objectFit: 'contain' }}
         priority
       />
@@ -68,15 +68,15 @@ export default function SiteIntroLogo() {
         letterSpacing: '0.28em',
         textTransform: 'uppercase',
       }}>
-        ATNER
+        {/*ATNER */}
       </div>
       <div style={{
-        fontSize: '0.6rem',
+        fontSize: '0.9rem',
         color: 'rgba(255,255,255,0.3)',
         letterSpacing: '0.22em',
         textTransform: 'uppercase',
       }}>
-        Atlas Énergie · Maroc
+        {/* Atlas Énergie · */}Maroc
       </div>
     </div>
   );
