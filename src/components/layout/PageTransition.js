@@ -130,7 +130,7 @@ export default function PageTransition({ children }) {
         }}
       >
         <Image
-          src="/favicon.ico"
+          src="/LOGO_rev.png"
           alt="ATNER"
           width={140}
           height={50}

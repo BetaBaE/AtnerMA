@@ -165,15 +165,16 @@ export default async function HomePage() {
           backdrop-filter: blur(4px);
         }
         .proj-3d-badge {
-          font-size: 0.62rem;
-          font-weight: 700;
-          letter-spacing: 0.12em;
+          display: inline-block;
+          font-size: 0.65rem;
+          font-weight: 800;
+          letter-spacing: 0.14em;
           text-transform: uppercase;
-          background: #16a34a;
-          color: #ffffff;
-          padding: 0.22rem 0.6rem;
+          background: transparent;
+          color: #D4A017;
+          border: 2px solid #D4A017;
+          padding: 0.22rem 0.65rem;
           border-radius: 3px;
-          backdrop-filter: blur(4px);
         }
         .proj-body { padding: 1.5rem; background: #ffffff; }
         .proj-title {
@@ -341,7 +342,7 @@ export default async function HomePage() {
                   <div className="proj-thumb" style={{ background: p.thumbBg }}>
                     <span className="proj-badge">{p.category}</span>
                     {p.model?.url && (
-                      <span className="proj-3d-badge">Modèle 3D</span>
+                      <span className="proj-3d-badge">3D</span>
                     )}
                   </div>
                   <div className="proj-body">

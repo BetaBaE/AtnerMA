@@ -252,58 +252,62 @@ export default async function ProjectDetailPage({ params }) {
       </section>
 
       {/* ── 3D MODEL ── */}
-      <section className="section-surface">
-        <div className="container">
-          <div className="section-header">
-            <span className="overline">Visualisation</span>
-            <h2>Modèle 3D du Projet</h2>
-          </div>
-          {project.model?.url ? (
-            <div style={{ borderRadius: '8px', overflow: 'hidden', height: '500px' }}>
-              <ConstructionSite3DLazy
-                modelUrl={project.model.url}
-                title={project.title}
-                subtitle={`${project.region} · ${project.year}`}
-                viewportHeight="500px"
-              />
+      {project.model?.url && (
+        <section className="section-surface">
+          <div className="container">
+            <div className="section-header">
+              <span className="overline">Visualisation</span>
+              <h2>Modèle 3D du Projet</h2>
             </div>
-          ) : (
-            <div style={{
-              height: '320px',
-              background: '#f0f4f8',
-              border: '2px dashed rgba(10,22,40,0.12)',
-              borderRadius: '8px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '1rem',
-              color: 'rgba(10,22,40,0.3)',
-            }}>
-              <svg viewBox="0 0 24 24" fill="none"
-                   stroke="currentColor" strokeWidth="1.5"
-                   strokeLinecap="round" strokeLinejoin="round"
-                   width="48" height="48">
-                <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                <line x1="12" y1="22.08" x2="12" y2="12"/>
-              </svg>
+            {project.model?.url ? (
+              <div style={{ borderRadius: '8px', overflow: 'hidden', height: '500px' }}>
+                <ConstructionSite3DLazy
+                  modelUrl={project.model.url}
+                  title={project.title}
+                  subtitle={`${project.region} · ${project.year}`}
+                  viewportHeight="500px"
+                />
+              </div>
+            ) : (
               <div style={{
-                fontFamily: "'Barlow Condensed', sans-serif",
-                fontSize: '1rem',
-                fontWeight: 600,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
+                height: '320px',
+                background: '#f0f4f8',
+                border: '2px dashed rgba(10,22,40,0.12)',
+                borderRadius: '8px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '1rem',
+                color: 'rgba(10,22,40,0.3)',
               }}>
-                Aucun modèle 3D disponible
+                <svg viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="1.5"
+                  strokeLinecap="round" strokeLinejoin="round"
+                  width="48" height="48">
+                  <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                  <line x1="12" y1="22.08" x2="12" y2="12" />
+                </svg>
+                <div style={{
+                  fontFamily: "'Barlow Condensed', sans-serif",
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                }}>
+                  Aucun modèle 3D disponible
+                </div>
+                <div style={{ fontSize: '0.82rem' }}>
+                  Le modèle 3D de ce projet n&apos;a pas encore été ajouté.
+                </div>
               </div>
-              <div style={{ fontSize: '0.82rem' }}>
-                Le modèle 3D de ce projet n&apos;a pas encore été ajouté.
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
+            )}
+          </div>
+        </section>
+
+      )}
+      
 
       {/* ── CTA ── */}
       <section className="section-dark" data-section="detail-cta" style={{ textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
