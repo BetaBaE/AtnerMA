@@ -74,9 +74,13 @@ export default async function HomePage() {
       <style>{`
         /* Activity cards */
         .act-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
           gap: 1.25rem;
+        }
+        .act-grid > * {
+          flex: 0 0 calc(33.333% - 1rem);
         }
         .act-card {
           background: #ffffff;
@@ -230,7 +234,7 @@ export default async function HomePage() {
 
         /* Responsive */
         @media (max-width: 1024px) {
-          .act-grid { grid-template-columns: repeat(2, 1fr); }
+          .act-grid > * { flex: 0 0 calc(50% - 1rem); }
         }
         @media (max-width: 860px) {
           .home-hero { padding: 5rem 1.25rem 4rem; }
@@ -239,7 +243,7 @@ export default async function HomePage() {
           .cta-band { padding: 4rem 1.25rem; }
         }
         @media (max-width: 580px) {
-          .act-grid { grid-template-columns: 1fr; }
+          .act-grid > * { flex: 0 0 100%; }
         }
       `}</style>
 

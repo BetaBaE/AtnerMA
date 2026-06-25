@@ -32,7 +32,7 @@ export const GET_POST_BY_ID = gql`
 
 export const GET_ALL_PROJECTS = gql`
   query GetAllProjects {
-    projectCollection {
+    projectCollection(limit: 50) {
       items {
         sys {
           id

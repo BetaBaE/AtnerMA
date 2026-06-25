@@ -6,6 +6,7 @@ import Badge3D from '@/components/Badge3D';
 import BackButton from '@/components/realisations/BackButton';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { contentfulClient } from '@/lib/contentful';
+import { getAllProjects } from '@/lib/api';
 import { GET_ALL_PROJECTS, GET_PROJECT_BY_SLUG } from '@/lib/queries';
 
 const CATEGORY_BG = {
@@ -23,16 +24,24 @@ export async function generateStaticParams() {
 
 const SECTIONS = [
   { id: 'detail-hero',    label: 'Projet' },
-  { id: 'detail-content', label: 'Détails' },
+  { id: 'detail-content', label: 'Projet' },
   { id: 'detail-cta',     label: 'Contact' },
 ];
 
 export default async function ProjectDetailPage({ params }) {
   const { slug } = await params;
-  const data = await contentfulClient.request(GET_PROJECT_BY_SLUG, { slug });
+  const [data, allProjects] = await Promise.all([
+    contentfulClient.request(GET_PROJECT_BY_SLUG, { slug }),
+    getAllProjects(),
+  ]);
   const raw = data.projectCollection.items[0];
 
   if (!raw) notFound();
+
+  const sorted = [...allProjects].sort((a, b) => a.year - b.year);
+  const currentIdx = sorted.findIndex((p) => p.slug === slug);
+  const prevProject = currentIdx > 0 ? sorted[currentIdx - 1] : null;
+  const nextProject = currentIdx < sorted.length - 1 ? sorted[currentIdx + 1] : null;
 
   const project = {
     title: raw.title,
@@ -169,11 +178,63 @@ export default async function ProjectDetailPage({ params }) {
           line-height: 1.75;
         }
 
+        /* PROJECT NAV */
+        .detail-nav {
+          display: flex;
+          align-items: stretch;
+          min-height: 72px;
+          width: 100vw;
+          margin-left: calc(-50vw + 50%);
+          margin-top: 0;
+          background: #0a1628;
+        }
+        .detail-nav-link {
+          width: 20%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          padding: 1.25rem 2rem;
+          text-decoration: none;
+          cursor: pointer;
+        }
+        .detail-nav-label {
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #00a3ff;
+        }
+        .detail-nav-title {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #ffffff;
+          line-height: 1.3;
+          transition: color 0.2s;
+        }
+        .detail-nav-link:hover .detail-nav-title { color: #00a3ff; }
+        .detail-nav-center {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 1rem;
+          color: rgba(255,255,255,0.35);
+          letter-spacing: 0.1em;
+          text-align: center;
+        }
+        .detail-nav-placeholder { width: 20%; }
+
         @media (max-width: 1024px) {
           .detail-hero { padding: 4rem 1.25rem 2.5rem; }
+          .detail-nav-link { width: 28%; padding: 1rem 1.25rem; }
+          .detail-nav-placeholder { width: 28%; }
         }
         @media (max-width: 640px) {
           .detail-specs-grid { grid-template-columns: 1fr; }
+          .detail-nav-link { width: 40%; padding: 1rem; }
+          .detail-nav-placeholder { width: 40%; }
+          .detail-nav-title { font-size: 0.88rem; }
         }
       `}</style>
 
@@ -189,6 +250,7 @@ export default async function ProjectDetailPage({ params }) {
       {/* ── CONTENT ── */}
       <section className="section" data-section="detail-content">
         <div className="container">
+
           <div className="detail-layout">
             {/* Main column */}
             <div>
@@ -279,6 +341,27 @@ export default async function ProjectDetailPage({ params }) {
 
       )}
       
+
+      {/* ── PROJECT NAV ── */}
+      <nav className="detail-nav">
+        {prevProject ? (
+          <Link href={`/realisations/${prevProject.slug}`} className="detail-nav-link" style={{ alignItems: 'flex-start' }}>
+            <span className="detail-nav-label">← Projet précédent</span>
+            <span className="detail-nav-title">{prevProject.title}</span>
+          </Link>
+        ) : <div className="detail-nav-placeholder" />}
+
+        <div className="detail-nav-center">
+          {currentIdx + 1} / {sorted.length}
+        </div>
+
+        {nextProject ? (
+          <Link href={`/realisations/${nextProject.slug}`} className="detail-nav-link" style={{ alignItems: 'flex-end' }}>
+            <span className="detail-nav-label">Projet suivant →</span>
+            <span className="detail-nav-title">{nextProject.title}</span>
+          </Link>
+        ) : <div className="detail-nav-placeholder" />}
+      </nav>
 
       {/* ── CTA ── */}
       <section className="section-dark" data-section="detail-cta" style={{ textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
