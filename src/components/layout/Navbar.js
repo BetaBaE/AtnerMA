@@ -219,16 +219,12 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="navbar-logo">
             <Image
-              src="/favicon.ico"
-              alt="ATNER Logo"
-              width={36}
-              height={36}
+              src="/LOGO_ATNER-1.jpg"
+              alt="ATNER"
+              width={240}
+              height={70}
               style={{ objectFit: 'contain' }}
             />
-            <div>
-              <span className="logo-text">AT<span>NER</span></span>
-              <span className="logo-sub">Atlas Énergie · Maroc</span>
-            </div>
           </Link>
 
           {/* Desktop nav */}

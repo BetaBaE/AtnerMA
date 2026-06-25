@@ -232,7 +232,7 @@ export default function HistoryTimeline() {
                 className="timeline-img"
                 style={{
                   width: '45%',
-                  height: '65vh',
+                  height: '72vh',
                   position: 'relative',
                   borderRadius: '8px',
                   overflow: 'hidden',
@@ -244,7 +244,8 @@ export default function HistoryTimeline() {
                   src={item.image}
                   alt={item.label}
                   fill
-                  style={{ objectFit: 'cover' }}
+                  quality={100}
+                  style={{ objectFit: 'contain' }}
                   sizes="45vw"
                 />
                 <div style={{

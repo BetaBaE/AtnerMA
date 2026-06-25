@@ -213,13 +213,12 @@ export default function Footer() {
             <div className="footer-brand">
               <Link href="/" className="footer-logo">
                 <Image
-                  src="/favicon.ico"
+                  src="/LOGO_rev.png"
                   alt="ATNER"
-                  width={30}
-                  height={30}
+                  width={100}
+                  height={34}
                   style={{ objectFit: 'contain' }}
                 />
-                <span className="footer-logo-text">AT<span>NER</span></span>
               </Link>
               <p className="footer-tagline">
                 Leader national dans les services de l`électricité, de l`énergie
