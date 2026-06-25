@@ -103,7 +103,7 @@ export default function ActivitiesCarousel({ activities, highlightSlug }) {
   const stopAuto  = useCallback(() => { clearInterval(autoRef.current); }, []);
   const startAuto = useCallback(() => {
     clearInterval(autoRef.current);
-    autoRef.current = setInterval(() => setIndex((i) => i + 1), 20000);
+    autoRef.current = setInterval(() => setIndex((i) => i + 1), 8000);
   }, []);
 
   // Auto-advance on mount, clear on unmount

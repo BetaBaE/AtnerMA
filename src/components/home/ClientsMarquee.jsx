@@ -25,36 +25,12 @@ export default function ClientsMarquee({ clients }) {
           to   { transform: translateX(-50%); }
         }
         .client-badge {
+          flex-shrink: 0;
+          margin: 0 0.85rem;
           width: 130px;
           height: 130px;
           border-radius: 50%;
-          background: #ffffff;
-          border: 1.5px solid rgba(10,22,40,0.1);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 0.45rem;
-          flex-shrink: 0;
-          margin: 0 0.85rem;
-          transition: border-color 0.2s, box-shadow 0.2s;
-          cursor: default;
-          padding: 0.5rem;
-        }
-        .client-badge:hover {
-          border-color: #00a3ff;
-          box-shadow: 0 0 0 3px rgba(0,163,255,0.15);
-        }
-        .client-badge-name {
-          font-family: 'Barlow Condensed', sans-serif;
-          font-size: 0.7rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          color: #0a1628;
-          text-align: center;
-          line-height: 1.2;
-          white-space: nowrap;
+          overflow: hidden;
         }
       `}</style>
 
@@ -65,11 +41,10 @@ export default function ClientsMarquee({ clients }) {
               <Image
                 src={c.logo}
                 alt={c.name}
-                width={64}
-                height={64}
-                style={{ objectFit: 'contain' }}
+                width={130}
+                height={130}
+                style={{ objectFit: 'contain', width: '100%', height: '100%' }}
               />
-              <span className="client-badge-name">{c.name}</span>
             </div>
           ))}
         </div>
