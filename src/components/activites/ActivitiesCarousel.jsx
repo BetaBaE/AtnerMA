@@ -23,6 +23,7 @@ export default function ActivitiesCarousel({ activities, highlightSlug }) {
   const trackRef     = useRef(null);
   const fadeTimerRef = useRef(null);
   const didHighlight = useRef(false);
+  const autoRef      = useRef(null);
 
   const [index, setIndex]         = useState(N); // start in middle copy
   const [cardWidth, setCardWidth] = useState(0);
@@ -99,8 +100,20 @@ export default function ActivitiesCarousel({ activities, highlightSlug }) {
     };
   }, [highlightSlug, cardWidth, activities, N]);
 
-  const goLeft  = useCallback(() => setIndex((i) => i - 1), []);
-  const goRight = useCallback(() => setIndex((i) => i + 1), []);
+  const stopAuto  = useCallback(() => { clearInterval(autoRef.current); }, []);
+  const startAuto = useCallback(() => {
+    clearInterval(autoRef.current);
+    autoRef.current = setInterval(() => setIndex((i) => i + 1), 20000);
+  }, []);
+
+  // Auto-advance on mount, clear on unmount
+  useEffect(() => {
+    startAuto();
+    return stopAuto;
+  }, [startAuto, stopAuto]);
+
+  const goLeft  = useCallback(() => { setIndex((i) => i - 1); startAuto(); }, [startAuto]);
+  const goRight = useCallback(() => { setIndex((i) => i + 1); startAuto(); }, [startAuto]);
 
   const translateX = cardWidth > 0 ? -(index * (cardWidth + GAP_PX)) : 0;
 
@@ -154,7 +167,7 @@ export default function ActivitiesCarousel({ activities, highlightSlug }) {
         }
       `}</style>
 
-      <div className="carousel-outer">
+      <div className="carousel-outer" onMouseEnter={stopAuto} onMouseLeave={startAuto}>
         <button className="carousel-btn" onClick={goLeft} aria-label="Précédent">←</button>
 
         <div className="carousel-viewport" ref={viewportRef}>
