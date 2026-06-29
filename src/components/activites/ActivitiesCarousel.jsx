@@ -77,7 +77,7 @@ export default function ActivitiesCarousel({ activities, highlightSlug }) {
 
     // Center the card when possible; for index 0 it is leftmost of 3
     const targetIndex = Math.max(N, N + cardIndex - 1);
-    setIndex(targetIndex);
+    const indexTimer = setTimeout(() => setIndex(targetIndex), 0);
 
     const glowTimer = setTimeout(() => {
       const glowEl = viewportRef.current?.closest('.carousel-outer')
@@ -95,6 +95,7 @@ export default function ActivitiesCarousel({ activities, highlightSlug }) {
     }, 500);
 
     return () => {
+      clearTimeout(indexTimer);
       clearTimeout(glowTimer);
       clearTimeout(fadeTimerRef.current);
     };
