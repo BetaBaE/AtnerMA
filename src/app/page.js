@@ -85,7 +85,7 @@ export default async function HomePage() {
         .act-card {
           background: #ffffff;
           border: 1px solid rgba(10,22,40,0.07);
-          border-top: 3px solid #00a3ff;
+          border-top: 3px solid #32b2fd;
           border-radius: 6px;
           padding: 2rem 1.75rem;
           transition: transform 0.22s, box-shadow 0.22s;
