@@ -11,13 +11,17 @@ export default function ConstructionSite3D({
   viewportHeight = "100vh",
 }) {
   const mountRef = useRef(null);
+  const containerRef = useRef(null);
+  const updateCameraRef = useRef(null);
   const [hoveredLabel, setHoveredLabel] = useState(null);
   const [zoom, setZoom] = useState(90);
   const [loadError, setLoadError] = useState(false);
   const sphericalRef = useRef({ radius: 90, theta: Math.PI / 5, phi: Math.PI / 3.2 });
+  const targetRadiusRef = useRef(90);
 
   useEffect(() => {
     const mount = mountRef.current;
+    const container = containerRef.current;
     let width = mount.clientWidth;
     let height = mount.clientHeight;
 
@@ -39,6 +43,7 @@ export default function ConstructionSite3D({
       );
       camera.lookAt(target);
     };
+    updateCameraRef.current = updateCamera;
     updateCamera();
 
     // ─── Renderer ─────────────────────────────────────────────────────────────
@@ -149,6 +154,7 @@ export default function ConstructionSite3D({
           // Frame the camera around the loaded model
           target.set(0, (size.y * scale) / 2, 0);
           sphericalRef.current.radius = targetSize * 1.6;
+          targetRadiusRef.current = sphericalRef.current.radius;
           setZoom(Math.round(sphericalRef.current.radius));
           updateCamera();
           setLoadError(false);
@@ -464,19 +470,17 @@ export default function ConstructionSite3D({
     const onUp = () => { isDragging = false; };
     const onWheel = (e) => {
       e.preventDefault();
-      sphericalRef.current.radius = Math.max(20, Math.min(200, sphericalRef.current.radius + e.deltaY * 0.08));
-      setZoom(Math.round(sphericalRef.current.radius));
-      updateCamera();
+      targetRadiusRef.current = Math.max(20, Math.min(200, targetRadiusRef.current + e.deltaY * 0.08));
     };
 
     renderer.domElement.addEventListener("mousedown", onDown);
     renderer.domElement.addEventListener("mousemove", onMove);
     renderer.domElement.addEventListener("mouseup", onUp);
     renderer.domElement.addEventListener("mouseleave", onUp);
-    renderer.domElement.addEventListener("wheel", onWheel, { passive: false });
     renderer.domElement.addEventListener("touchstart", e => onDown(e), { passive: true });
     renderer.domElement.addEventListener("touchmove", e => onMove(e), { passive: true });
     renderer.domElement.addEventListener("touchend", onUp);
+    container.addEventListener("wheel", onWheel, { passive: false });
 
     // ─── Animate ──────────────────────────────────────────────────────────────
     let raf;
@@ -485,6 +489,14 @@ export default function ConstructionSite3D({
       raf = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
       if (animatedObjects.drum) animatedObjects.drum.rotation.y = t * 0.6;
+
+      const diff = targetRadiusRef.current - sphericalRef.current.radius;
+      if (Math.abs(diff) > 0.05) {
+        sphericalRef.current.radius += diff * 0.12;
+        updateCamera();
+        setZoom(Math.round(sphericalRef.current.radius));
+      }
+
       renderer.render(scene, camera);
     };
     animate();
@@ -506,7 +518,7 @@ export default function ConstructionSite3D({
       renderer.domElement.removeEventListener("mousemove", onMove);
       renderer.domElement.removeEventListener("mouseup", onUp);
       renderer.domElement.removeEventListener("mouseleave", onUp);
-      renderer.domElement.removeEventListener("wheel", onWheel);
+      container.removeEventListener("wheel", onWheel);
       renderer.dispose();
       if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
     };
@@ -515,7 +527,7 @@ export default function ConstructionSite3D({
   const zoomLevel = Math.round(100 - ((zoom - 20) / 180) * 100);
 
   return (
-    <div style={{
+    <div ref={containerRef} style={{
       width: "100%", height: viewportHeight, position: "relative",
       fontFamily: "'Roboto', 'Arial', sans-serif",
       overflow: "hidden", background: "#202124"
@@ -602,13 +614,43 @@ export default function ConstructionSite3D({
         ))}
       </div> */}
 
+      {/* ── Zoom buttons ── */}
+      <div style={{
+        position: "absolute", bottom: 14, left: 14,
+        display: "flex", flexDirection: "column",
+        borderRadius: 10, overflow: "hidden",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.4)",
+      }}>
+        {[{ label: "+", delta: -18 }, { label: "−", delta: 18 }].map(({ label, delta }, i) => (
+          <button
+            key={label}
+            onClick={() => {
+              targetRadiusRef.current = Math.max(20, Math.min(200, targetRadiusRef.current + delta));
+            }}
+            style={{
+              width: 52, height: 52,
+              background: "rgba(32,33,36,0.82)",
+              border: "none",
+              borderTop: i === 1 ? "1px solid rgba(255,255,255,0.12)" : "none",
+              fontSize: 26, cursor: "pointer",
+              color: "rgba(255,255,255,0.92)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              padding: 0, lineHeight: 1,
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       {/* ── Layer toggle buttons ── */}
 
 
       {/* ── Legend (demo mock-site mode only) ── */}
       {!modelUrl && (
         <div style={{
-          position: "absolute", bottom: 14, left: 14,
+          position: "absolute", bottom: 14, left: 80,
           background: "rgba(255,255,255,0.95)",
           borderRadius: 10,
           padding: "10px 14px",
