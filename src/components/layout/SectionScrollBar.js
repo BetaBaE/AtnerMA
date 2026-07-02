@@ -32,7 +32,7 @@ const SECTION_THEME = {
 
   // Réalisations
   'real-hero':  'dark',
-  'real-grid':  'dark',
+  'real-grid':  'light',
   'real-phare': 'light',
   'real-cta':   'dark',
 

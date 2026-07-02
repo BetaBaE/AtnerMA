@@ -1,277 +1,185 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Badge3D from '@/components/Badge3D';
-import { useRouter } from 'next/navigation';
-import { usePageTransitionLink } from '@/components/layout/PageTransition';
 
-const DISP_SRC = 'https://res.cloudinary.com/joostkiens/image/upload/v1549447783/codepen/displacement_map_2.png';
+const TYPE_COLORS = {
+  Epuration:   '#0066cc',
+  Traitement:  '#00a3ff',
+  Dessalement: '#7c3aed',
+  Transfert:   '#059669',
+  Pompage:     '#d97706',
+  Réservoirs:  '#dc2626',
+};
+
+// Extended bounds so Dakhla (Western Sahara) is fully visible
+const MIN_LNG = -17.8, MAX_LNG = -0.5, MIN_LAT = 20.2, MAX_LAT = 36.4;
+const VBW = 440, VBH = 640;
+
+function proj(lng, lat) {
+  return [
+    ((lng - MIN_LNG) / (MAX_LNG - MIN_LNG)) * VBW,
+    ((MAX_LAT - lat) / (MAX_LAT - MIN_LAT)) * VBH,
+  ];
+}
+
+function ringToPath(ring) {
+  return ring.map(([lng, lat], i) => {
+    const [x, y] = proj(lng, lat);
+    return `${i === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`;
+  }).join(' ') + ' Z';
+}
+
+function geoToPathD(geo) {
+  if (!geo) return '';
+  const parts = [];
+  const features = geo.features ?? [geo];
+  for (const feat of features) {
+    const geom = feat.geometry ?? feat;
+    if (geom.type === 'Polygon') {
+      for (const ring of geom.coordinates) parts.push(ringToPath(ring));
+    } else if (geom.type === 'MultiPolygon') {
+      for (const poly of geom.coordinates) {
+        for (const ring of poly) parts.push(ringToPath(ring));
+      }
+    }
+  }
+  return parts.join(' ');
+}
+
+const PAGE_SIZE = 5;
 
 export default function ProjectsClient({ projects }) {
-  const router   = useRouter();
-  const navigate = usePageTransitionLink();
-  const wrapRef  = useRef(null);
-  const pixiRef  = useRef(null); // { app, imgSprite, dispSprite, dispFilter, PIXI }
-  const rafRef   = useRef(null);
-  const navRef   = useRef(null);
-  const animRef  = useRef(null); // cancel any in-progress fade
+  const [activeFilters, setActiveFilters] = useState(new Set());
+  const [hoveredSlug, setHoveredSlug]     = useState(null);
+  const [moroccoGeo, setMoroccoGeo]       = useState(null);
+  const [page, setPage]                   = useState(0);
 
-  const categories = ['Tous', ...new Set(projects.map((p) => p.category).filter(Boolean))];
-  const [activeFilter, setActiveFilter] = useState('Tous');
-  const [hoveredIdx,   setHoveredIdx]   = useState(null);
-  const [zooming,      setZooming]      = useState(false); // lock list during zoom
-
-  const filtered = activeFilter === 'Tous'
-    ? projects
-    : projects.filter((p) => p.category === activeFilter);
-
-  // ── Bootstrap Pixi once ─────────────────────────────────
   useEffect(() => {
-    let destroyed = false;
-
-    rafRef.current = requestAnimationFrame(async () => {
-      const PIXI = await import('pixi.js');
-      const wrap = wrapRef.current;
-      if (!wrap || destroyed) return;
-
-      const w = wrap.offsetWidth  || window.innerWidth;
-      const h = wrap.offsetHeight || window.innerHeight;
-
-      const app = new PIXI.Application();
-      await app.init({
-        width:           w,
-        height:          h,
-        backgroundAlpha: 0,
-        antialias:       true,
-        autoDensity:     true,
-        resolution:      window.devicePixelRatio || 1,
-      });
-
-      // Mount the canvas
-      wrap.appendChild(app.canvas);
-      app.canvas.style.cssText =
-        'position:absolute;inset:0;width:100%!important;height:100%!important;pointer-events:none;z-index:0;';
-
-      // Image sprite — starts invisible, centered, half-scale (like the original)
-      const imgSprite = new PIXI.Sprite();
-      imgSprite.anchor.set(0.5);
-      imgSprite.x     = w / 2;
-      imgSprite.y     = h / 2;
-      imgSprite.alpha = 0;
-      app.stage.addChild(imgSprite);
-
-      // Displacement sprite
-      let dispSprite = null;
-      let dispFilter = null;
-      try {
-        const dispTex  = await PIXI.Assets.load(DISP_SRC);
-        dispSprite     = new PIXI.Sprite(dispTex);
-        dispSprite.anchor.set(0.5);
-        dispSprite.x   = w / 2;
-        dispSprite.y   = h / 2;
-        // match original: scale.y *= height / width
-        dispSprite.scale.y = dispSprite.scale.y * (h / w);
-        app.stage.addChild(dispSprite);
-
-        dispFilter = new PIXI.DisplacementFilter({ sprite: dispSprite, scale: 0 });
-        app.stage.filters = [dispFilter];
-      } catch { /* no displacement — degrade */ }
-
-      const onResize = () => {
-        const nw = wrap.offsetWidth;
-        const nh = wrap.offsetHeight;
-        app.renderer.resize(nw, nh);
-        imgSprite.x = nw / 2;
-        imgSprite.y = nh / 2;
-        if (dispSprite) {
-          dispSprite.x   = nw / 2;
-          dispSprite.y   = nh / 2;
-          dispSprite.scale.y = dispSprite.scale.x * (nh / nw);
-        }
-        // Re-fit if sprite is already loaded
-        if (imgSprite.texture?.width) fitSprite(imgSprite, nw, nh);
-      };
-      window.addEventListener('resize', onResize);
-
-      pixiRef.current = { app, imgSprite, dispSprite, dispFilter, PIXI, onResize };
-    });
-
-    return () => {
-      destroyed = true;
-      cancelAnimationFrame(rafRef.current);
-      const p = pixiRef.current;
-      if (p) {
-        window.removeEventListener('resize', p.onResize);
-        p.app.destroy(false, { children: true });
-        pixiRef.current = null;
-      }
-    };
+    fetch('/data/morocco.geojson').then(r => r.json()).then(setMoroccoGeo);
   }, []);
 
-  // ── Swap image on hover ──────────────────────────────────
-  useEffect(() => {
-    if (zooming) return; // don't swap during zoom animation
+  const allTypes = [...new Set(projects.map(p => p.projectType).filter(Boolean))];
+  const isFiltered = activeFilters.size > 0;
+  const filtered = isFiltered
+    ? projects.filter(p => activeFilters.has(p.projectType))
+    : projects;
 
-    const p = pixiRef.current;
-    if (!p) return;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const pageItems  = filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
-    const { app, imgSprite, dispFilter, PIXI } = p;
-    const project = hoveredIdx !== null ? filtered[hoveredIdx] : null;
+  const toggleFilter = (type) => {
+    setActiveFilters(prev => {
+      const next = new Set(prev);
+      if (next.has(type)) next.delete(type); else next.add(type);
+      return next;
+    });
+    setPage(0);
+  };
 
-    // Cancel any previous fade
-    if (animRef.current) { cancelAnimationFrame(animRef.current); animRef.current = null; }
-
-    if (!project?.coverImage?.url) {
-      animRef.current = fadeAlpha(imgSprite, 0, 300, (id) => { animRef.current = id; });
-      return;
-    }
-
-    async function swap() {
-      try {
-        const tex = await PIXI.Assets.load(project.coverImage.url);
-        if (!pixiRef.current || zooming) return;
-        imgSprite.texture = tex;
-
-        // Fill the full canvas
-        fitSprite(imgSprite, app.screen.width, app.screen.height);
-        imgSprite.x = app.screen.width  / 2;
-        imgSprite.y = app.screen.height / 2;
-
-        if (dispFilter) { dispFilter.scale.x = 0; dispFilter.scale.y = 0; }
-        animRef.current = fadeAlpha(imgSprite, 1, 350, (id) => { animRef.current = id; });
-      } catch { /* no image */ }
-    }
-    swap();
-  }, [hoveredIdx, filtered, zooming]);
-
-  // ── Click: zoom + ripple then navigate ─────────────────
-  const handleClick = useCallback((e, slug, idx) => {
-    const p = pixiRef.current;
-    if (!p || !p.dispFilter || !p.imgSprite.texture?.width) {
-      navigate(`/realisations/${slug}`);
-      return;
-    }
-
-    setZooming(true);
-    navRef.current = slug;
-
-    const { app, imgSprite, dispSprite, dispFilter } = p;
-    const wrap   = wrapRef.current;
-    const rect   = wrap.getBoundingClientRect();
-    const cx     = e.clientX - rect.left;
-    const cy     = e.clientY - rect.top;
-    const w      = app.screen.width;
-    const h      = app.screen.height;
-    const screenRatio = h / w;
-
-    // Same math as original
-    const maxX = cx - w / 2 > 0 ? cx : w - cx;
-    const maxY = cy - h / 2 > 0 ? cy : h - cy;
-    const rippleDiameter = Math.sqrt(maxX * maxX + maxY * maxY) * 2;
-    const maxScale = rippleDiameter / 100;
-
-    // Move displacement sprite to click position (like original set pixi pos)
-    if (dispSprite) {
-      dispSprite.x = cx;
-      dispSprite.y = cy;
-      dispFilter.scale.x = 0;
-      dispFilter.scale.y = 0;
-    }
-
-    const dur   = 1200;
-    const start = performance.now();
-
-    function tick(now) {
-      const t  = Math.min((now - start) / dur, 1);
-      const et = easeOutBounce(t);
-
-      // Ripple spreads from click point — image stays fixed
-      if (dispFilter && dispSprite) {
-        dispFilter.scale.x = et * maxScale * 350 + 10;
-        dispFilter.scale.y = et * maxScale * 350 * screenRatio + 10;
-        dispSprite.scale.x = et * maxScale;
-        dispSprite.scale.y = et * maxScale * screenRatio;
-      }
-
-      if (t < 1) {
-        animRef.current = requestAnimationFrame(tick);
-      } else {
-        navigate(`/realisations/${navRef.current}`);
-      }
-    }
-    animRef.current = requestAnimationFrame(tick);
-  }, [navigate]);
+  // Dots are driven by all projects (not the paginated slice)
+  const geoProjects    = projects.filter(p => p.latitude != null && p.longitude != null);
+  const hoveredProject = hoveredSlug ? projects.find(p => p.slug === hoveredSlug) : null;
+  const bgSrc          = hoveredProject?.coverImage?.url ?? null;
+  const showBg         = hoveredSlug !== null && bgSrc !== null;
+  const mapPathD       = geoToPathD(moroccoGeo);
 
   return (
     <>
       <style>{`
-        .pc-wrap {
-          position: relative;
-          min-height: 100vh;
-          background: #0a0e18;
-          overflow: hidden;
+        .pc-container {
+          padding: 0;
         }
-        /* vignette so left text stays readable */
-        .pc-vignette {
+
+        /* ── Dark filter button overrides ── */
+        .filter-btn {
+          border: 1.5px solid rgba(255,255,255,0.18);
+          color: rgba(255,255,255,0.6);
+          background: transparent;
+        }
+        .filter-btn:hover {
+          border-color: rgba(255,255,255,0.4);
+          color: #ffffff;
+        }
+        .filter-btn.active {
+          background: #0066cc;
+          color: #fff;
+          border-color: #0066cc;
+        }
+        .filter-label { color: rgba(255,255,255,0.35) !important; }
+
+        /* ── Grid wrapper — full-bleed dark band ── */
+        .pc-grid-wrap {
+          position: relative;
+          width: 100vw;
+          margin-left: calc(-50vw + 50%);
+          overflow: clip;
+          background: linear-gradient(135deg, #0a1628 0%, #0e2340 100%);
+          padding-top: 3.5rem;
+          padding-bottom: 2.5rem;
+        }
+
+        /* ── Full-bleed hover image ── */
+        .pc-hover-img {
           position: absolute;
           inset: 0;
-          background: linear-gradient(
-            to right,
-            rgba(6,14,28,0.95) 0%,
-            rgba(6,14,28,0.7) 40%,
-            rgba(6,14,28,0.1) 70%,
-            transparent 100%
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          z-index: 0;
+          filter: brightness(1.3);
+          border-radius: 10px;
+          transition: opacity 0.4s ease;
+          -webkit-mask-image: linear-gradient(to right,
+            transparent 0%,
+            transparent 22%,
+            rgba(0,0,0,0.5) 38%,
+            rgba(0,0,0,0.9) 55%,
+            black 65%
           );
-          pointer-events: none;
-          z-index: 1;
+          mask-image: linear-gradient(to right,
+            transparent 0%,
+            transparent 22%,
+            rgba(0,0,0,0.5) 38%,
+            rgba(0,0,0,0.9) 55%,
+            black 65%
+          );
         }
-        .pc-ui {
+
+        /* ── Dark tint ── */
+        .pc-hover-tint {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          border-radius: 10px;
+          background: linear-gradient(to right, rgba(10,22,40,0.9) 5%, rgba(10,22,40,0.45) 15%, rgba(10,22,40,0.7) 30%);
+          pointer-events: none;
+          transition: opacity 0.4s ease;
+        }
+
+        /* ── Filter bar (inside dark band) ── */
+        .pc-filter-inner {
           position: relative;
           z-index: 2;
-          padding: 5rem 3.5rem;
-          max-width: 660px;
-          pointer-events: ${zooming ? 'none' : 'auto'};
-          opacity: ${zooming ? '0.4' : '1'};
-          transition: opacity 0.3s;
+          padding: 0 2.5rem 1rem;
         }
-        /* Filter */
-        .pc-filter-bar {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          flex-wrap: wrap;
-          margin-bottom: 3.5rem;
+
+        /* ── Split grid ── */
+        .pc-split-grid {
+          position: relative;
+          z-index: 2;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 2rem;
+          align-items: start;
+          padding: 0 2.5rem 1rem;
         }
-        .pc-filter-label {
-          font-size: 0.68rem;
-          font-weight: 700;
-          letter-spacing: 0.16em;
-          text-transform: uppercase;
-          color: rgba(255,255,255,0.22);
-          margin-right: 0.4rem;
-        }
-        .pc-filter-btn {
-          font-size: 0.7rem;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          padding: 0.35rem 0.9rem;
-          border-radius: 3px;
-          border: 1px solid rgba(255,255,255,0.1);
-          background: transparent;
-          color: rgba(255,255,255,0.3);
-          cursor: pointer;
-          transition: all 0.18s;
-        }
-        .pc-filter-btn:hover  { border-color: rgba(255,255,255,0.28); color: #fff; }
-        .pc-filter-btn.active { background: #00a3ff; border-color: #00a3ff; color: #fff; }
-        /* Project list */
-        .pc-list { list-style: none; }
-        .pc-item {
-          border-top: 1px solid rgba(255,255,255,0.055);
-          cursor: pointer;
-        }
-        .pc-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.055); }
+
+        /* ── Project list ── */
+        .pc-list { list-style: none; padding: 0; margin: 0; }
+        .pc-item { border-top: 1px solid rgba(255,255,255,0.08); }
+        .pc-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
         .pc-item-inner {
           display: flex;
           align-items: center;
@@ -284,7 +192,7 @@ export default function ProjectsClient({ projects }) {
           font-size: 0.56rem;
           font-weight: 700;
           letter-spacing: 0.18em;
-          color: rgba(255,255,255,0.15);
+          color: rgba(255,255,255,0.25);
           min-width: 2rem;
         }
         .pc-item-info { flex: 1; display: flex; flex-direction: column; gap: 0.18rem; }
@@ -294,19 +202,21 @@ export default function ProjectsClient({ projects }) {
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.04em;
-          color: rgba(255,255,255,0.4);
+          color: #ffffff;
           transition: color 0.2s;
           line-height: 1.1;
         }
-        .pc-item:hover .pc-item-title { color: #fff; }
+        .pc-item:hover .pc-item-title,
+        .pc-item:focus-within .pc-item-title { color: #00a3ff; }
         .pc-item-meta {
           font-size: 0.68rem;
-          color: rgba(255,255,255,0.18);
+          color: rgba(255,255,255,0.4);
           transition: color 0.2s;
           display: flex;
           gap: 0.6rem;
         }
-        .pc-item:hover .pc-item-meta { color: rgba(255,255,255,0.45); }
+        .pc-item:hover .pc-item-meta,
+        .pc-item:focus-within .pc-item-meta { color: rgba(255,255,255,0.65); }
         .pc-item-right {
           display: flex;
           align-items: center;
@@ -318,120 +228,291 @@ export default function ProjectsClient({ projects }) {
           font-weight: 700;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          background: rgba(0,163,255,0.1);
-          color: rgba(0,163,255,0.6);
-          border: 1px solid rgba(0,163,255,0.18);
+          background: rgba(0,163,255,0.08);
+          color: #00a3ff;
+          border: 1px solid rgba(0,163,255,0.45);
           padding: 0.18rem 0.5rem;
           border-radius: 2px;
           transition: all 0.18s;
         }
-        .pc-item:hover .pc-item-badge { background: rgba(0,163,255,0.22); color: #00a3ff; }
+        .pc-item:hover .pc-item-badge { background: rgba(0,163,255,0.18); }
         .pc-arrow {
           font-size: 0.85rem;
-          color: rgba(255,255,255,0.1);
+          color: rgba(255,255,255,0.4);
           transition: color 0.2s, transform 0.2s;
         }
-        .pc-item:hover .pc-arrow { color: #fff; transform: translateX(5px); }
+        .pc-item:hover .pc-arrow { color: #00a3ff; transform: translateX(5px); }
         .pc-empty {
           padding: 4rem 0;
-          color: rgba(255,255,255,0.22);
+          color: rgba(255,255,255,0.35);
           font-size: 0.9rem;
         }
-        @media (max-width: 768px) {
-          .pc-ui { padding: 3.5rem 1.5rem; max-width: 100%; }
+
+        /* ── Pagination ── */
+        .pc-pagination {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          margin-top: 1rem;
+          padding-top: 0.75rem;
+        }
+        .pc-page-btn {
+          width: 30px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: transparent;
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 4px;
+          color: rgba(255,255,255,0.7);
+          cursor: pointer;
+          font-size: 1rem;
+          transition: border-color 0.18s, color 0.18s;
+        }
+        .pc-page-btn:hover:not(:disabled) {
+          border-color: #00a3ff;
+          color: #00a3ff;
+        }
+        .pc-page-btn:disabled {
+          opacity: 0.3;
+          cursor: default;
+        }
+        .pc-page-label {
+          font-size: 0.8rem;
+          color: rgba(255,255,255,0.5);
+        }
+
+        /* ── Map column ── */
+        .pc-map-sticky {
+          position: sticky;
+          top: 100px;
+          z-index: 2;
+        }
+        .pc-map-block {
+          position: relative;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+        .pc-map-svg {
+          position: relative;
+          z-index: 2;
+          display: block;
+          width: 100%;
+          max-height: calc(100vh - 220px);
+          height: auto;
+          margin: 0 auto;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1024px) {
+          .pc-split-grid { grid-template-columns: 1fr; }
+          .pc-map-sticky { position: static; order: -1; z-index: 2; }
+          .pc-map-block { height: 320px; }
+          .pc-map-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            max-height: none;
+          }
+          .pc-hover-img {
+            -webkit-mask-image: linear-gradient(to bottom,
+              transparent 0%,
+              rgba(0,0,0,0.85) 60%,
+              black 100%
+            );
+            mask-image: linear-gradient(to bottom,
+              transparent 0%,
+              rgba(0,0,0,0.85) 60%,
+              black 100%
+            );
+          }
+        }
+        @media (max-width: 860px) {
+          .pc-filter-inner { padding: 0 1.25rem 1rem; }
+          .pc-split-grid   { padding: 0 1.25rem 1rem; }
         }
       `}</style>
 
-      <div className="pc-wrap" ref={wrapRef}>
-        {/* PixiJS canvas injected by effect */}
-        <div className="pc-vignette" />
+      <div className="pc-container">
+        <div className="pc-grid-wrap">
 
-        <div className="pc-ui">
-          {/* Filter bar */}
-          <div className="pc-filter-bar">
-            <span className="pc-filter-label">Filtrer :</span>
-            {categories.map((cat) => (
+          {/* Full-bleed cover image */}
+          <img
+            src={bgSrc ?? undefined}
+            alt=""
+            aria-hidden="true"
+            className="pc-hover-img"
+            style={{ opacity: showBg ? 1 : 0 }}
+          />
+
+          {/* Dark tint */}
+          <div
+            className="pc-hover-tint"
+            style={{ opacity: showBg ? 1 : 0 }}
+          />
+
+          {/* Filter bar — inside the dark card */}
+          <div className="pc-filter-inner">
+            <div className="filter-bar">
+              <span className="filter-label">Type :</span>
               <button
-                key={cat}
                 type="button"
-                className={`pc-filter-btn${activeFilter === cat ? ' active' : ''}`}
-                onClick={() => { setActiveFilter(cat); setHoveredIdx(null); }}
+                className={`filter-btn${activeFilters.size === 0 ? ' active' : ''}`}
+                onClick={() => { setActiveFilters(new Set()); setPage(0); }}
               >
-                {cat}
+                Tous
               </button>
-            ))}
+              {allTypes.map(type => (
+                <button
+                  key={type}
+                  type="button"
+                  className={`filter-btn${activeFilters.has(type) ? ' active' : ''}`}
+                  onClick={() => toggleFilter(type)}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Project list */}
-          {filtered.length > 0 ? (
-            <ul className="pc-list">
-              {filtered.map((p, i) => (
-                <li
-                  key={p.slug}
-                  className="pc-item"
-                  onMouseEnter={() => !zooming && setHoveredIdx(i)}
-                  onMouseLeave={() => !zooming && setHoveredIdx(null)}
-                  onClick={(e) => handleClick(e, p.slug, i)}
+          {/* Two-column grid */}
+          <div className="pc-split-grid">
+
+            {/* Left: paginated project list */}
+            <div style={{ paddingLeft: '0.5rem' }}>
+              {filtered.length > 0 ? (
+                <>
+                  <ul className="pc-list">
+                    {pageItems.map((p, i) => (
+                      <li
+                        key={p.slug}
+                        className="pc-item"
+                        onMouseEnter={() => setHoveredSlug(p.slug)}
+                        onMouseLeave={() => setHoveredSlug(null)}
+                      >
+                        <Link href={`/realisations/${p.slug}`} className="pc-item-inner">
+                          <span className="pc-item-num">
+                            {String(page * PAGE_SIZE + i + 1).padStart(2, '0')}
+                          </span>
+                          <div className="pc-item-info">
+                            <span className="pc-item-title">{p.title}</span>
+                            <div className="pc-item-meta">
+                              {p.region && <span>{p.region}</span>}
+                              {p.client && <span>{p.client}</span>}
+                              {p.year   && <span>{p.year}</span>}
+                            </div>
+                          </div>
+                          <div className="pc-item-right">
+                            {p.model?.url && <Badge3D variant="dark" />}
+                            {p.category && <span className="pc-item-badge">{p.category}</span>}
+                            <span className="pc-arrow">→</span>
+                          </div>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="pc-pagination">
+                      <button
+                        type="button"
+                        className="pc-page-btn"
+                        onClick={() => setPage(p => p - 1)}
+                        disabled={page === 0}
+                        aria-label="Page précédente"
+                      >
+                        ‹
+                      </button>
+                      <span className="pc-page-label">{page + 1} / {totalPages}</span>
+                      <button
+                        type="button"
+                        className="pc-page-btn"
+                        onClick={() => setPage(p => p + 1)}
+                        disabled={page === totalPages - 1}
+                        aria-label="Page suivante"
+                      >
+                        ›
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="pc-empty">Aucun projet pour ce filtre.</div>
+              )}
+            </div>
+
+            {/* Right: sticky SVG map — dots show ALL filtered projects, not just this page */}
+            <div className="pc-map-sticky">
+              <div className="pc-map-block">
+                <svg
+                  viewBox="0 0 440 640"
+                  className="pc-map-svg"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    filter:     hoveredSlug ? 'drop-shadow(0 0 6px rgba(0,0,0,0.4))' : 'none',
+                    transition: 'filter 0.3s ease',
+                  }}
                 >
-                  <div className="pc-item-inner">
-                    <span className="pc-item-num">{String(i + 1).padStart(2, '0')}</span>
-                    <div className="pc-item-info">
-                      <span className="pc-item-title">{p.title}</span>
-                      <div className="pc-item-meta">
-                        {p.region && <span>{p.region}</span>}
-                        {p.client && <span>{p.client}</span>}
-                        {p.year   && <span>{p.year}</span>}
-                      </div>
-                    </div>
-                    <div className="pc-item-right">
-                      {p.model?.url && <Badge3D variant="dark" style={{ marginLeft: '30px' }} />}
-                      {p.category && <span className="pc-item-badge">{p.category}</span>}
-                      <span className="pc-arrow">→</span>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="pc-empty">Aucun projet pour ce filtre.</div>
-          )}
+                  {mapPathD && (
+                    <path
+                      d={mapPathD}
+                      style={{
+                        fill:        hoveredSlug ? 'rgba(10,22,40,0.35)' : 'rgba(255,255,255,0.04)',
+                        stroke:      '#ffffff',
+                        strokeWidth: hoveredSlug ? 2 : 1.5,
+                        transition:  'fill 0.3s ease, stroke-width 0.3s ease',
+                      }}
+                    />
+                  )}
+                  {geoProjects.map(p => {
+                    const [cx, cy] = proj(p.longitude, p.latitude);
+                    const color = TYPE_COLORS[p.projectType] ?? '#0066cc';
+                    const filteredOut = isFiltered && !activeFilters.has(p.projectType);
+                    const isHovered   = hoveredSlug === p.slug;
+                    const otherHover  = hoveredSlug !== null && !isHovered;
+
+                    let fillOpacity;
+                    if (filteredOut)     fillOpacity = 0.12;
+                    else if (isHovered)  fillOpacity = 1;
+                    else if (otherHover) fillOpacity = 0.25;
+                    else                 fillOpacity = 0.85;
+
+                    return (
+                      <g key={p.slug}>
+                        {isHovered && (
+                          <circle
+                            cx={cx.toFixed(2)}
+                            cy={cy.toFixed(2)}
+                            r={14}
+                            fill="none"
+                            stroke={color}
+                            strokeWidth={2}
+                            opacity={0.5}
+                          />
+                        )}
+                        <circle
+                          cx={cx.toFixed(2)}
+                          cy={cy.toFixed(2)}
+                          r={isHovered ? 10 : 6}
+                          fill={color}
+                          fillOpacity={fillOpacity}
+                          stroke="#fff"
+                          strokeWidth="1.5"
+                          style={{ transition: 'r 0.25s ease, fill-opacity 0.25s ease' }}
+                        />
+                      </g>
+                    );
+                  })}
+                </svg>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </>
   );
-}
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-// Fit sprite to cover w×h, return the scale used
-function fitSprite(sprite, w, h) {
-  if (!sprite.texture?.width) return;
-  const scale = Math.max(w / sprite.texture.width, h / sprite.texture.height);
-  sprite.scale.set(scale);
-}
-
-// Animate alpha, calls onTick with the rAF id so caller can cancel
-function fadeAlpha(target, to, ms, onTick) {
-  const from  = target.alpha;
-  const start = performance.now();
-  let id;
-  function tick(now) {
-    const t = Math.min((now - start) / ms, 1);
-    target.alpha = from + (to - from) * easeOutPower2(t);
-    if (t < 1) { id = requestAnimationFrame(tick); onTick?.(id); }
-  }
-  id = requestAnimationFrame(tick);
-  onTick?.(id);
-}
-
-// easeOut cubic — used for image zoom
-function easeOutPower2(t) { return 1 - Math.pow(1 - t, 2); }
-
-// Bounce ease — faithful to original Bounce.easeOut for the displacement ripple
-function easeOutBounce(t) {
-  const n1 = 7.5625, d1 = 2.75;
-  if (t < 1 / d1)       return n1 * t * t;
-  if (t < 2 / d1)       return n1 * (t -= 1.5   / d1) * t + 0.75;
-  if (t < 2.5 / d1)     return n1 * (t -= 2.25  / d1) * t + 0.9375;
-  return                        n1 * (t -= 2.625 / d1) * t + 0.984375;
 }

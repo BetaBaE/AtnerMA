@@ -24,7 +24,10 @@ export default async function RealisationsPage() {
     year: item.year,
     featured: item.featured ?? false,
     coverImage: item.coverImage ?? null,
-    model : item.model ?? null
+    model: item.model ?? null,
+    latitude: item.latitude ?? null,
+    longitude: item.longitude ?? null,
+    projectType: item.projectType ?? null,
   }));
 
   const featured = projects.find((p) => p.featured) ?? null;
@@ -249,6 +252,29 @@ export default async function RealisationsPage() {
           border: 1px solid rgba(10,22,40,0.07);
         }
 
+        /* CARTE BUTTON */
+        .carte-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.55rem 1.25rem;
+          border: 1.5px solid #0066cc;
+          border-radius: 4px;
+          color: #0066cc;
+          font-family: 'Barlow Condensed', sans-serif;
+          font-size: 0.85rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          text-decoration: none;
+          transition: background 0.2s, color 0.2s;
+          margin-top: 1.5rem;
+        }
+        .carte-btn:hover {
+          background: #0066cc;
+          color: #ffffff;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 1024px) {
           .proj-full-grid { grid-template-columns: repeat(2, 1fr); }
@@ -269,6 +295,13 @@ export default async function RealisationsPage() {
           <div className="page-hero-label">Portfolio</div>
           <h1>Nos Projets<br />Livrés</h1>
           <p>Plus de 500 réalisations à travers les 12 régions du Maroc. Distribution, éclairage, solaire et génie civil.</p>
+          <Link href="/realisations/carte" className="carte-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Carte des Projets
+          </Link>
         </div>
       </section>
 
