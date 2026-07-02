@@ -76,6 +76,13 @@ export default async function ProjectDetailPage({ params }) {
   return (
     <>
       <BackButton href="/realisations" label="Retour aux Réalisations" />
+      <Link
+        href="/realisations/carte"
+        className="back-btn-fixed"
+        style={{ top: 'calc(1.5rem + 44px + 6px)' }}
+      >
+        ← Carte des projets
+      </Link>
       <SectionScrollBar sections={SECTIONS} />
       <style>{`
         .detail-hero {

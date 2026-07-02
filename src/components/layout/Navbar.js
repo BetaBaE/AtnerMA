@@ -36,7 +36,7 @@ export default function Navbar() {
           top: 0;
           left: 0;
           right: 0;
-          z-index: 100;
+          z-index: 1000;
           padding: 0 2.5rem;
           transition: transform 0.45s cubic-bezier(0.16,1,0.3,1), background 0.35s ease, box-shadow 0.35s ease, opacity 0.45s ease;
           transform: translateY(-100%);
@@ -49,14 +49,16 @@ export default function Navbar() {
           pointer-events: all;
         }
         .navbar.transparent {
-          background: rgba(255,255,255,0.92);
+          background: rgba(255,255,255,0.82);
           border-bottom: 1px solid rgba(10,22,40,0.08);
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
         }
         .navbar.solid {
-          background: #ffffff;
-          border-bottom: 1px solid rgba(10,22,40,0.1);
+          background: rgba(255,255,255,0.82);
+          border-bottom: 1px solid rgba(10,22,40,0.08);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
           box-shadow: 0 2px 24px rgba(10,22,40,0.08);
         }
         .navbar-inner {

@@ -55,6 +55,9 @@ export const GET_ALL_PROJECTS = gql`
           contentType
           fileName
         }
+        latitude
+        longitude
+        projectType
       }
     }
   }
@@ -142,6 +145,9 @@ export const GET_PROJECT_BY_SLUG = gql`
           contentType
           fileName
         }
+        latitude
+        longitude
+        projectType
         gallery: galleryCollection(limit: 10) {
           items {
             url
