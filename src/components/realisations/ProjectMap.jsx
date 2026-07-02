@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { MapContainer, GeoJSON, CircleMarker, Popup, useMap } from 'react-leaflet';
 
 const TYPE_COLORS = {
-  Epuration:   '#0066cc',
+  Epuration:   '#074685',
   Traitement:  '#00a3ff',
   Dessalement: '#7c3aed',
   Transfert:   '#059669',
@@ -15,18 +15,21 @@ const TYPE_COLORS = {
 const HEIGHT = 'calc(100vh - 70px)';
 
 function FlyToHandler({ mapRef }) {
-  mapRef.current = useMap();
+  const map = useMap();
+  useEffect(() => { mapRef.current = map; }, [map, mapRef]);
   return null;
 }
 
 export default function ProjectMap({ projects }) {
   const [activeFilters, setActiveFilters] = useState(new Set());
   const [moroccoGeo, setMoroccoGeo] = useState(null);
+  const [listPage, setListPage] = useState(0);
   const mapRef = useRef(null);
 
   useEffect(() => {
     fetch('/data/morocco.geojson').then(r => r.json()).then(setMoroccoGeo);
   }, []);
+
 
   const geoProjects = projects.filter(p => p.latitude != null && p.longitude != null);
   const allTypes = [...new Set(projects.map(p => p.projectType).filter(Boolean))];
@@ -35,12 +38,17 @@ export default function ProjectMap({ projects }) {
     ? geoProjects.filter(p => activeFilters.has(p.projectType))
     : geoProjects;
 
+  const PAGE_SIZE = 7;
+  const totalPages = Math.max(1, Math.ceil(filteredProjects.length / PAGE_SIZE));
+  const visibleListProjects = filteredProjects.slice(listPage * PAGE_SIZE, (listPage + 1) * PAGE_SIZE);
+
   const toggleFilter = (type) => {
     setActiveFilters(prev => {
       const next = new Set(prev);
       if (next.has(type)) next.delete(type); else next.add(type);
       return next;
     });
+    setListPage(0);
   };
 
   const handleFlyTo = (p) => {
@@ -48,12 +56,60 @@ export default function ProjectMap({ projects }) {
   };
 
   return (
+    <>
+    <style>{`
+      .leaflet-popup-content-wrapper {
+        padding: 0 !important;
+        overflow: hidden;
+        border-radius: 8px !important;
+      }
+      .leaflet-popup-content {
+        margin: 0 !important;
+        width: auto !important;
+      }
+      .leaflet-popup-close-button {
+        color: #ffffff !important;
+        background: rgba(0,0,0,0.45) !important;
+        border-radius: 50% !important;
+        width: 22px !important;
+        height: 22px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        top: 6px !important;
+        right: 6px !important;
+        font-size: 14px !important;
+        line-height: 1 !important;
+      }
+      .popup-link {
+        position: relative;
+        display: inline-block;
+        color: #0066cc;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .popup-link::before,
+      .popup-link::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 0;
+        height: 1.5px;
+        background: linear-gradient(90deg, #00a3ff, #0066cc);
+        transition: width 0.3s ease;
+      }
+      .popup-link::before { top: -2px; }
+      .popup-link::after { bottom: -2px; }
+      .popup-link:hover::before,
+      .popup-link:hover::after { width: 100%; }
+    `}</style>
     <div style={{ display: 'flex', height: HEIGHT }}>
 
       {/* ── Sidebar ── */}
       <div style={{
         width: 280, flexShrink: 0, height: HEIGHT,
-        overflowY: 'auto',
+        overflow: 'hidden',
         background: '#ffffff',
         borderRight: '1px solid rgba(10,22,40,0.08)',
         display: 'flex', flexDirection: 'column',
@@ -105,7 +161,7 @@ export default function ProjectMap({ projects }) {
             })}
           </div>
           <button
-            onClick={() => setActiveFilters(new Set())}
+            onClick={() => { setActiveFilters(new Set()); setListPage(0); }}
             style={{
               display: 'inline-flex',
               padding: '0.3rem 0.8rem', borderRadius: 20,
@@ -123,7 +179,7 @@ export default function ProjectMap({ projects }) {
 
         {/* Project list */}
         <div>
-          {filteredProjects.map(p => (
+          {visibleListProjects.map(p => (
             <div
               key={p.slug}
               onClick={() => handleFlyTo(p)}
@@ -151,6 +207,39 @@ export default function ProjectMap({ projects }) {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Pagination */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          gap: '0.5rem', padding: '0.75rem 1.5rem',
+          borderTop: '1px solid rgba(10,22,40,0.06)',
+        }}>
+          <button
+            onClick={() => setListPage(p => p - 1)}
+            disabled={listPage === 0}
+            style={{
+              width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'transparent', border: '1px solid rgba(10,22,40,0.12)',
+              borderRadius: 4, cursor: listPage === 0 ? 'default' : 'pointer',
+              color: '#0a1628', fontSize: '1rem',
+              opacity: listPage === 0 ? 0.3 : 1,
+            }}
+          >‹</button>
+          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#0a1628', minWidth: 48, textAlign: 'center' }}>
+            {listPage + 1} / {totalPages}
+          </span>
+          <button
+            onClick={() => setListPage(p => p + 1)}
+            disabled={listPage === totalPages - 1}
+            style={{
+              width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'transparent', border: '1px solid rgba(10,22,40,0.12)',
+              borderRadius: 4, cursor: listPage === totalPages - 1 ? 'default' : 'pointer',
+              color: '#0a1628', fontSize: '1rem',
+              opacity: listPage === totalPages - 1 ? 0.3 : 1,
+            }}
+          >›</button>
         </div>
       </div>
 
@@ -189,50 +278,46 @@ export default function ProjectMap({ projects }) {
                 }}
               >
                 <Popup>
-                  <div style={{ minWidth: 180, fontFamily: 'sans-serif' }}>
+                  <div style={{ minWidth: 200, fontFamily: 'sans-serif' }}>
                     {p.coverImage?.url && (
                       <img
                         src={p.coverImage.url}
                         alt={p.title}
                         style={{
-                          width: 130, height: 80,
-                          objectFit: 'cover', borderRadius: 4,
-                          display: 'block', marginBottom: '0.5rem',
+                          width: '100%', height: 110,
+                          objectFit: 'cover',
+                          display: 'block',
+                          borderRadius: '4px 4px 0 0',
+                          margin: 0,
                         }}
                       />
                     )}
-                    <div style={{
-                      fontFamily: "'Barlow Condensed', sans-serif",
-                      fontWeight: 'bold', fontSize: '0.9rem',
-                      color: '#0a1628', marginBottom: '0.25rem',
-                    }}>
-                      {p.title}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#888', marginBottom: '0.4rem' }}>
-                      {p.region}
-                    </div>
-                    {p.projectType && (
-                      <span style={{
-                        background: color, color: 'white',
-                        borderRadius: 10, padding: '2px 8px',
-                        fontSize: '0.7rem', display: 'inline-block',
-                        marginBottom: '0.25rem',
+                    <div style={{ padding: '0.65rem 0.75rem' }}>
+                      <div style={{
+                        fontFamily: "'Barlow Condensed', sans-serif",
+                        fontWeight: 'bold', fontSize: '0.9rem',
+                        color: '#0a1628', marginBottom: '0.25rem',
                       }}>
-                        {p.projectType}
-                      </span>
-                    )}
-                    <br />
-                    <a
-                      href={`/realisations/${p.slug}`}
-                      style={{
-                        background: '#0066cc', color: 'white',
-                        padding: '0.3rem 0.75rem', borderRadius: 4,
-                        fontSize: '0.75rem', textDecoration: 'none',
-                        display: 'inline-block', marginTop: '0.5rem',
-                      }}
-                    >
-                      Voir le projet →
-                    </a>
+                        {p.title}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#888', marginBottom: '0.4rem' }}>
+                        {p.region}
+                      </div>
+                      {p.projectType && (
+                        <span style={{
+                          background: color, color: 'white',
+                          borderRadius: 10, padding: '2px 8px',
+                          fontSize: '0.7rem', display: 'inline-block',
+                          marginBottom: '0.4rem',
+                        }}>
+                          {p.projectType}
+                        </span>
+                      )}
+                      <br />
+                      <a href={`/realisations/${p.slug}`} className="popup-link" style={{ marginTop: '0.4rem' }}>
+                        Voir le projet →
+                      </a>
+                    </div>
                   </div>
                 </Popup>
               </CircleMarker>
@@ -241,5 +326,6 @@ export default function ProjectMap({ projects }) {
         </MapContainer>
       </div>
     </div>
+    </>
   );
 }
