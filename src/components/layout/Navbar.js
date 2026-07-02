@@ -203,6 +203,31 @@ export default function Navbar() {
           margin-top: 0.5rem;
         }
 
+        .nav-link-hover {
+          position: relative;
+          text-decoration: none;
+        }
+        .nav-link-hover::before,
+        .nav-link-hover::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          width: 0;
+          height: 1.5px;
+          background: linear-gradient(90deg, #00a3ff, #0066cc);
+          transition: width 0.3s ease;
+        }
+        .nav-link-hover::before {
+          top: -3px;
+        }
+        .nav-link-hover::after {
+          bottom: -3px;
+        }
+        .nav-link-hover:hover::before,
+        .nav-link-hover:hover::after {
+          width: 100%;
+        }
+
         @media (max-width: 860px) {
           .nav-links { display: none; }
           .hamburger { display: flex; }
@@ -221,7 +246,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="navbar-logo">
             <Image
-              src="/LOGO_ATNER-1.jpg"
+              src="/LOGO_ATNER-1.png"
               alt="ATNER"
               width={240}
               height={70}
@@ -233,7 +258,7 @@ export default function Navbar() {
           <ul className="nav-links">
             {navLinks.slice(0, -1).map((link) => (
               <li key={link.href}>
-                <Link href={link.href}>{link.label}</Link>
+                <Link href={link.href} className="nav-link-hover">{link.label}</Link>
               </li>
             ))}
             <li>
@@ -259,7 +284,7 @@ export default function Navbar() {
       {/* Mobile menu */}
       <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
         {navLinks.map((link) => (
-          <Link key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>
+          <Link key={link.href} href={link.href} className="nav-link-hover" onClick={() => setMenuOpen(false)}>
             {link.label}
           </Link>
         ))}
