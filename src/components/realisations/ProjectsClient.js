@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Badge3D from '@/components/Badge3D';
+import { ctfImage } from '@/lib/contentful-image';
 
 const TYPE_COLORS = {
   Epuration:   '#0066cc',
@@ -81,7 +82,7 @@ export default function ProjectsClient({ projects }) {
   // Dots are driven by all projects (not the paginated slice)
   const geoProjects    = projects.filter(p => p.latitude != null && p.longitude != null);
   const hoveredProject = hoveredSlug ? projects.find(p => p.slug === hoveredSlug) : null;
-  const bgSrc          = hoveredProject?.coverImage?.url ?? null;
+  const bgSrc          = ctfImage(hoveredProject?.coverImage?.url ?? null, { width: 1200 });
   const showBg         = hoveredSlug !== null && bgSrc !== null;
   const mapPathD       = geoToPathD(moroccoGeo);
 

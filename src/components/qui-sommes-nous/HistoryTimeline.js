@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { gsap } from 'gsap';
@@ -11,35 +11,35 @@ const TIMELINE = [
     period: `${new Date().getFullYear()} — Aujourd'hui`,
     label: "Expansion nationale",
     desc: "ATNER s'impose comme leader national des services de l'eau et des travaux publics, avec plus de 500 projets livrés à travers les 12 régions du Royaume.",
-    image: '/intro/load_LAST.jpg',
+    image: '/intro/load_LAST.webp',
     year: "Aujourd'hui",
   },
   {
     period: '2015 — 2009',
     label: 'Diversification',
     desc: "Diversification des expertises et développement de nouvelles compétences techniques. Présence renforcée sur les marchés publics nationaux et régionaux.",
-    image: '/intro/load_4.jpg',
+    image: '/intro/load_4.webp',
     year: '2015',
   },
   {
     period: '2009 — 2004',
     label: 'Croissance',
     desc: "Croissance soutenue et consolidation du positionnement sur les marchés publics. Développement des équipes terrain et du bureau d'études.",
-    image: '/intro/load_3.jpg',
+    image: '/intro/load_3.webp',
     year: '2009',
   },
   {
     period: '2004 — 1996',
     label: 'Premiers grands marchés',
     desc: "Premiers grands marchés publics nationaux. ATNER s'établit comme référence dans les infrastructures hydrauliques et le génie civil.",
-    image: '/intro/load_2.jpg',
+    image: '/intro/load_2.webp',
     year: '2004',
   },
   {
     period: '1988 — Fondation',
     label: 'Création',
     desc: "Fondée en 1988 à Rabat, ATNER démarre dans la réalisation d'ouvrages hydrauliques, la construction de réservoirs de stockage et le génie civil des stations de pompage.",
-    image: '/intro/load_1.jpg',
+    image: '/intro/load_1.webp',
     year: '1988',
   },
 ];

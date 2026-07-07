@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
@@ -94,31 +94,31 @@ export default function SiteIntro() {
         yearEnd: 2015,
         label: '2009 — 2015',
         desc: 'Diversification et nouvelles expertises',
-        image: '/intro/load_LAST.jpg',
+        image: '/intro/load_LAST.webp',
       },
       {
         yearEnd: 2009,
         label: '2004 — 2009',
         desc: 'Croissance et marchés publics nationaux',
-        image: '/intro/load_4.jpg',
+        image: '/intro/load_4.webp',
       },
       {
         yearEnd: 2004,
         label: '1996 — 2004',
         desc: 'Premiers grands marchés publics',
-        image: '/intro/load_3.jpg',
+        image: '/intro/load_3.webp',
       },
       {
         yearEnd: 1996,
         label: '1988 — 1996',
         desc: 'Création et spécialisation hydraulique',
-        image: '/intro/load_2.jpg',
+        image: '/intro/load_2.webp',
       },
       {
         yearEnd: 1988,
         label: 'Fondée en 1988',
         desc: 'ATNER — Atlas Énergie, Rabat, Maroc',
-        image: '/intro/load_1.jpg',
+        image: '/intro/load_1.webp',
       },
     ];
 
@@ -198,7 +198,7 @@ export default function SiteIntro() {
       }
       // Set initial image immediately so first period isn't blank
       if (layerARef.current) {
-        layerARef.current.style.backgroundImage = 'url(/intro/load_LAST.jpg)';
+        layerARef.current.style.backgroundImage = 'url(/intro/load_LAST.webp)';
       }
       // Start progress bar across total intro duration (~12s)
       if (progressRef.current) {
@@ -267,7 +267,7 @@ export default function SiteIntro() {
         style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: 'url(/intro/load_LAST.jpg)',
+          backgroundImage: 'url(/intro/load_LAST.webp)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',

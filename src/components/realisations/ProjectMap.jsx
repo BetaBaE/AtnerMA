@@ -1,5 +1,6 @@
 'use client';
 import 'leaflet/dist/leaflet.css';
+import { ctfImage } from '@/lib/contentful-image';
 import { useState, useRef, useEffect } from 'react';
 import { MapContainer, GeoJSON, CircleMarker, Popup, useMap } from 'react-leaflet';
 
@@ -281,7 +282,7 @@ export default function ProjectMap({ projects }) {
                   <div style={{ minWidth: 200, fontFamily: 'sans-serif' }}>
                     {p.coverImage?.url && (
                       <img
-                        src={p.coverImage.url}
+                        src={ctfImage(p.coverImage.url, { width: 600 })}
                         alt={p.title}
                         style={{
                           width: '100%', height: 110,

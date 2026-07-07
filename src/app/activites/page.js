@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { getAllActivities } from '@/lib/api';
 import ScrollReveal from '@/components/layout/ScrollReveal';
 import SectionScrollBar from '@/components/layout/SectionScrollBar';
@@ -249,7 +249,7 @@ export default async function ActivitesPage({ searchParams }) {
 
       {/* ── PAGE HERO ── */}
       <section className="page-hero" data-section="act-hero">
-        <img src="/hero imgs/activity.jpg" alt="" className="page-hero-image" aria-hidden="true" />
+        <img src="/hero imgs/activity.webp" alt="" className="page-hero-image" aria-hidden="true" />
         <div className="page-hero-inner">
           <div className="page-hero-label">Expertises</div>
           <h1>Nos Domaines<br />d&apos;Expertise</h1>

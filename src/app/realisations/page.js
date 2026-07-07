@@ -1,5 +1,6 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { getAllProjects } from '@/lib/api';
+import { ctfImage } from '@/lib/contentful-image';
 import ProjectsClient from '@/components/realisations/ProjectsClient';
 import ScrollReveal from '@/components/layout/ScrollReveal';
 import SectionScrollBar from '@/components/layout/SectionScrollBar';
@@ -290,7 +291,7 @@ export default async function RealisationsPage() {
 
       {/* ── PAGE HERO ── */}
       <section className="page-hero" data-section="real-hero">
-        <img src="/hero imgs/projects_img.jpg" alt="" className="page-hero-image" aria-hidden="true" />
+        <img src="/hero imgs/projects_img.webp" alt="" className="page-hero-image" aria-hidden="true" />
         <div className="page-hero-inner">
           <div className="page-hero-label">Portfolio</div>
           <h1>Nos Projets<br />Livrés</h1>
@@ -327,7 +328,7 @@ export default async function RealisationsPage() {
                 className="featured-thumb"
                 style={{
                   background: featured.coverImage
-                    ? `url(${featured.coverImage.url}) center/cover no-repeat`
+                    ? `url(${ctfImage(featured.coverImage.url, { width: 1200 })}) center/cover no-repeat`
                     : (CATEGORY_BG[featured.category] ?? DEFAULT_BG),
                 }}
               >

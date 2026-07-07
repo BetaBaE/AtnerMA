@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -297,7 +297,7 @@ export default function ContactPage() {
 
       {/* ── PAGE HERO ── */}
       <section className="page-hero" data-section="contact-hero">
-        <img src="/hero imgs/contact.jpg" alt="" className="page-hero-image" aria-hidden="true" />
+        <img src="/hero imgs/contact.webp" alt="" className="page-hero-image" aria-hidden="true" />
         <div className="page-hero-inner">
           <div className="page-hero-label">Contact</div>
           <h1>Contactez<br />ATNER</h1>

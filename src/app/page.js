@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getSiteConfig, getAllActivities, getFeaturedProjects } from '@/lib/api';
+import { ctfImage } from '@/lib/contentful-image';
 import Badge3D from '@/components/Badge3D';
 import StatsCounter from '@/components/home/StatsCounter';
 import YearIntro from '@/components/home/YearIntro';
@@ -65,7 +66,7 @@ export default async function HomePage() {
     client: item.client,
     model: item.model ?? null,
     thumbBg: item.coverImage
-      ? `url(${item.coverImage.url}) center/cover no-repeat`
+      ? `url(${ctfImage(item.coverImage.url, { width: 600 })}) center/cover no-repeat`
       : (CATEGORY_BG[item.category] ?? 'linear-gradient(135deg, #0a1628, #162540)'),
   }));
 

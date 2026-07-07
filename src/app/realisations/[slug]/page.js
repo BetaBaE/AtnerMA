@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { ctfImage } from '@/lib/contentful-image';
 import SectionScrollBar from '@/components/layout/SectionScrollBar';
 import ConstructionSite3DLazy from '@/components/3d/ConstructionSite3DLazy';
 import Badge3D from '@/components/Badge3D';
@@ -61,7 +62,7 @@ export default async function ProjectDetailPage({ params }) {
   };
 
   const heroBg = project.coverImage
-    ? `url(${project.coverImage.url}) center/cover no-repeat`
+    ? `url(${ctfImage(project.coverImage.url, { width: 1200 })}) center/cover no-repeat`
     : (CATEGORY_BG[project.category] ?? DEFAULT_BG);
 
   const specItems = [
