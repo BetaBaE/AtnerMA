@@ -109,6 +109,22 @@ export default function ProjectsClient({ projects }) {
         }
         .filter-label { color: rgba(255,255,255,0.35) !important; }
 
+        /* ── Type-coloured filter buttons ── */
+        .filter-btn.filter-btn-type {
+          border-color: var(--tc);
+          color: var(--tc);
+        }
+        .filter-btn.filter-btn-type:hover:not(.active) {
+          background: var(--tc-bg);
+          border-color: var(--tc);
+          color: var(--tc);
+        }
+        .filter-btn.filter-btn-type.active {
+          background: var(--tc);
+          color: #ffffff;
+          border-color: var(--tc);
+        }
+
         /* ── Grid wrapper — full-bleed dark band ── */
         .pc-grid-wrap {
           position: relative;
@@ -228,14 +244,11 @@ export default function ProjectsClient({ projects }) {
           font-weight: 700;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          background: rgba(0,163,255,0.08);
-          color: #00a3ff;
-          border: 1px solid rgba(0,163,255,0.45);
           padding: 0.18rem 0.5rem;
           border-radius: 2px;
-          transition: all 0.18s;
+          transition: filter 0.18s;
         }
-        .pc-item:hover .pc-item-badge { background: rgba(0,163,255,0.18); }
+        .pc-item:hover .pc-item-badge { filter: brightness(1.25); }
         .pc-arrow {
           font-size: 0.85rem;
           color: rgba(255,255,255,0.4);
@@ -364,16 +377,20 @@ export default function ProjectsClient({ projects }) {
               >
                 Tous
               </button>
-              {allTypes.map(type => (
-                <button
-                  key={type}
-                  type="button"
-                  className={`filter-btn${activeFilters.has(type) ? ' active' : ''}`}
-                  onClick={() => toggleFilter(type)}
-                >
-                  {type}
-                </button>
-              ))}
+              {allTypes.map(type => {
+                const c = TYPE_COLORS[type] ?? '#00a3ff';
+                return (
+                  <button
+                    key={type}
+                    type="button"
+                    className={`filter-btn filter-btn-type${activeFilters.has(type) ? ' active' : ''}`}
+                    style={{ '--tc': c, '--tc-bg': `${c}1A` }}
+                    onClick={() => toggleFilter(type)}
+                  >
+                    {type}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -385,33 +402,48 @@ export default function ProjectsClient({ projects }) {
               {filtered.length > 0 ? (
                 <>
                   <ul className="pc-list">
-                    {pageItems.map((p, i) => (
-                      <li
-                        key={p.slug}
-                        className="pc-item"
-                        onMouseEnter={() => setHoveredSlug(p.slug)}
-                        onMouseLeave={() => setHoveredSlug(null)}
-                      >
-                        <Link href={`/realisations/${p.slug}`} className="pc-item-inner">
-                          <span className="pc-item-num">
-                            {String(page * PAGE_SIZE + i + 1).padStart(2, '0')}
-                          </span>
-                          <div className="pc-item-info">
-                            <span className="pc-item-title">{p.title}</span>
-                            <div className="pc-item-meta">
-                              {p.region && <span>{p.region}</span>}
-                              {p.client && <span>{p.client}</span>}
-                              {p.year   && <span>{p.year}</span>}
+                    {pageItems.map((p, i) => {
+                      const badgeLabel = p.projectType || p.category;
+                      const badgeColor = TYPE_COLORS[p.projectType] ?? '#00a3ff';
+                      return (
+                        <li
+                          key={p.slug}
+                          className="pc-item"
+                          onMouseEnter={() => setHoveredSlug(p.slug)}
+                          onMouseLeave={() => setHoveredSlug(null)}
+                        >
+                          <Link href={`/realisations/${p.slug}`} className="pc-item-inner">
+                            <span className="pc-item-num">
+                              {String(page * PAGE_SIZE + i + 1).padStart(2, '0')}
+                            </span>
+                            <div className="pc-item-info">
+                              <span className="pc-item-title">{p.title}</span>
+                              <div className="pc-item-meta">
+                                {p.region && <span>{p.region}</span>}
+                                {p.client && <span>{p.client}</span>}
+                                {p.year   && <span>{p.year}</span>}
+                              </div>
                             </div>
-                          </div>
-                          <div className="pc-item-right">
-                            {p.model?.url && <Badge3D variant="dark" />}
-                            {p.category && <span className="pc-item-badge">{p.category}</span>}
-                            <span className="pc-arrow">→</span>
-                          </div>
-                        </Link>
-                      </li>
-                    ))}
+                            <div className="pc-item-right">
+                              {p.model?.url && <Badge3D variant="dark" />}
+                              {badgeLabel && (
+                                <span
+                                  className="pc-item-badge"
+                                  style={{
+                                    border:     `1px solid ${badgeColor}`,
+                                    color:       badgeColor,
+                                    background: `${badgeColor}1A`,
+                                  }}
+                                >
+                                  {badgeLabel}
+                                </span>
+                              )}
+                              <span className="pc-arrow">→</span>
+                            </div>
+                          </Link>
+                        </li>
+                      );
+                    })}
                   </ul>
 
                   {/* Pagination */}
