@@ -310,7 +310,6 @@ export default async function RealisationsPage() {
         </div>
       </section>
 
-      {/* ── PROJETS PHARES (petal immersion showcase) ── */}
       <ImmersionProjects projects={immersionProjects} />
 
       {/* ── FILTER + GRID (client — handles filter state) ── */}

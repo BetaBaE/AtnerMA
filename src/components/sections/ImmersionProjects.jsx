@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ctfImage } from '@/lib/contentful-image';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
@@ -12,8 +12,16 @@ function petalImage(project) {
 export default function ImmersionProjects({ projects }) {
   const [active, setActive] = useState(0);
 
+  const items = (projects ?? []).slice(0, 5);
+
+  useEffect(() => {
+    items.forEach((p) => {
+      const src = petalImage(p);
+      if (src) { const img = new window.Image(); img.src = ctfImage(src, { width: 1000 }); }
+    });
+  }, [items]);
+
   if (!projects?.length) return null;
-  const items = projects.slice(0, 5);
 
   const handleKeyDown = (e, i) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -32,7 +40,8 @@ export default function ImmersionProjects({ projects }) {
         }
         .immersion-petal {
           position: relative;
-          flex: 1;
+          flex: 0 1 12%;
+          min-width: 0;
           border-radius: 12px;
           overflow: hidden;
           cursor: pointer;
@@ -42,15 +51,33 @@ export default function ImmersionProjects({ projects }) {
           background-color: #0a1628;
           background-size: cover;
           background-position: center;
-          transition: flex-grow 0.6s cubic-bezier(0.4,0,0.2,1);
+          background-repeat: no-repeat;
+          transition: flex-basis 0.6s cubic-bezier(0.4,0,0.2,1), filter 0.4s ease, box-shadow 0.3s ease;
           text-align: left;
         }
         .immersion-petal.is-active {
-          flex-grow: 5;
+          flex: 1 1 56%;
         }
         .immersion-petal.is-collapsed {
-          flex-grow: 1;
-          filter: saturate(0.7) brightness(0.85);
+          flex: 0 1 12%;
+          filter: saturate(0.65) brightness(0.8);
+        }
+        .immersion-petal.is-collapsed:hover {
+          filter: saturate(1) brightness(1);
+          box-shadow: 0 0 24px rgba(0,163,255,0.45);
+        }
+        .immersion-petal.is-active::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: 12px;
+          box-shadow: inset 0 0 60px rgba(0,163,255,0.25), 0 0 40px rgba(0,163,255,0.35);
+          pointer-events: none;
+          opacity: 0;
+          animation: immersionGlow 0.6s ease 0.2s forwards;
+        }
+        @keyframes immersionGlow {
+          to { opacity: 1; }
         }
         .immersion-petal:focus-visible {
           outline: 2px solid #00a3ff;
@@ -70,14 +97,18 @@ export default function ImmersionProjects({ projects }) {
           padding: 2rem;
           background: linear-gradient(to top, rgba(10,22,40,0.9) 0%, rgba(10,22,40,0.4) 45%, transparent 75%);
           opacity: 0;
-          transform: translateY(12px);
+          visibility: hidden;
+          transform: scale(0.92);
+          transform-origin: bottom left;
           pointer-events: none;
-          transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s;
+          transition: opacity 0.45s ease 0.25s, transform 0.45s cubic-bezier(0.34,1.3,0.64,1) 0.25s, visibility 0s linear 0.7s;
         }
         .immersion-petal.is-active .immersion-overlay {
           opacity: 1;
-          transform: translateY(0);
+          visibility: visible;
+          transform: scale(1);
           pointer-events: auto;
+          transition: opacity 0.45s ease 0.25s, transform 0.45s cubic-bezier(0.34,1.3,0.64,1) 0.25s, visibility 0s;
         }
         .immersion-eyebrow {
           font-size: 0.7rem;
@@ -86,6 +117,23 @@ export default function ImmersionProjects({ projects }) {
           letter-spacing: 0.14em;
           color: #00a3ff;
           margin-bottom: 0.5rem;
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        .immersion-petal.is-active .immersion-eyebrow {
+          animation: immersionRise 0.5s ease 0.4s forwards;
+        }
+        .immersion-petal.is-active .immersion-title {
+          animation: immersionRise 0.5s ease 0.5s forwards;
+        }
+        .immersion-petal.is-active .immersion-specs {
+          animation: immersionRise 0.5s ease 0.6s forwards;
+        }
+        .immersion-petal.is-active .immersion-link {
+          animation: immersionRise 0.5s ease 0.7s forwards;
+        }
+        @keyframes immersionRise {
+          to { opacity: 1; transform: translateY(0); }
         }
         .immersion-title {
           font-family: 'Barlow Condensed', sans-serif;
@@ -96,6 +144,8 @@ export default function ImmersionProjects({ projects }) {
           color: #ffffff;
           line-height: 1.1;
           margin-bottom: 0.85rem;
+          opacity: 0;
+          transform: translateY(8px);
         }
         .immersion-specs {
           font-size: 0.85rem;
@@ -103,6 +153,8 @@ export default function ImmersionProjects({ projects }) {
           line-height: 1.5;
           max-height: 150px;
           overflow-y: auto;
+          opacity: 0;
+          transform: translateY(8px);
         }
         .immersion-specs p {
           margin: 0 0 0.5rem;
@@ -127,6 +179,8 @@ export default function ImmersionProjects({ projects }) {
           letter-spacing: 0.08em;
           color: #00a3ff;
           text-decoration: none;
+          opacity: 0;
+          transform: translateY(8px);
         }
         .immersion-link:hover {
           text-decoration: underline;
@@ -200,9 +254,17 @@ export default function ImmersionProjects({ projects }) {
         @media (prefers-reduced-motion: reduce) {
           .immersion-petal,
           .immersion-card,
-          .immersion-overlay {
+          .immersion-overlay,
+          .immersion-eyebrow,
+          .immersion-title,
+          .immersion-specs,
+          .immersion-link {
             transition: none;
+            animation: none;
+            opacity: 1;
+            transform: none;
           }
+          .immersion-petal.is-active::after { animation: none; opacity: 1; }
         }
       `}</style>
 
@@ -217,7 +279,7 @@ export default function ImmersionProjects({ projects }) {
           {items.map((project, i) => {
             const isActive = i === active;
             const src = petalImage(project);
-            const url = src ? ctfImage(src, { width: isActive ? 900 : 400 }) : null;
+            const url = src ? ctfImage(src, { width: 1000 }) : null;
             return (
               <button
                 key={project.slug}
@@ -253,7 +315,7 @@ export default function ImmersionProjects({ projects }) {
           {items.map((project, i) => {
             const isActive = i === active;
             const src = petalImage(project);
-            const url = src ? ctfImage(src, { width: isActive ? 900 : 400 }) : null;
+            const url = src ? ctfImage(src, { width: 1000 }) : null;
             return (
               <button
                 key={project.slug}

@@ -32,6 +32,7 @@ const SECTION_THEME = {
 
   // Réalisations
   'real-hero':  'dark',
+  immersion:    'light',
   'real-grid':  'dark',
   'real-phare': 'light',
   'real-cta':   'dark',
