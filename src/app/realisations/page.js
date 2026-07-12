@@ -1,7 +1,8 @@
 ﻿import Link from 'next/link';
-import { getAllProjects } from '@/lib/api';
+import { getAllProjects, getFeaturedProjects } from '@/lib/api';
 import { ctfImage } from '@/lib/contentful-image';
 import ProjectsClient from '@/components/realisations/ProjectsClient';
+import ImmersionProjects from '@/components/sections/ImmersionProjects';
 import ScrollReveal from '@/components/layout/ScrollReveal';
 import SectionScrollBar from '@/components/layout/SectionScrollBar';
 import ConstructionSite3D from '@/components/3d/ConstructionSite3DLazy';
@@ -16,6 +17,7 @@ const DEFAULT_BG = 'linear-gradient(135deg, #0a1628, #162540)';
 
 export default async function RealisationsPage() {
   const items = await getAllProjects();
+  const immersionProjects = await getFeaturedProjects();
   const projects = items.map((item) => ({
     slug: item.slug,
     title: item.title,
@@ -35,12 +37,14 @@ export default async function RealisationsPage() {
 
   const SECTIONS_BASE = [
     { id: 'real-hero', label: 'Intro' },
+    { id: 'immersion', label: 'Immersion' },
     { id: 'real-grid', label: 'Projets' },
     { id: 'real-cta',  label: 'Contact' },
   ];
   const SECTIONS = featured
     ? [
         { id: 'real-hero',  label: 'Intro' },
+        { id: 'immersion',  label: 'Immersion' },
         { id: 'real-grid',  label: 'Projets' },
         { id: 'real-phare', label: 'Phare' },
         { id: 'real-cta',   label: 'Contact' },
@@ -305,6 +309,9 @@ export default async function RealisationsPage() {
           </Link>
         </div>
       </section>
+
+      {/* ── PROJETS PHARES (petal immersion showcase) ── */}
+      <ImmersionProjects projects={immersionProjects} />
 
       {/* ── FILTER + GRID (client — handles filter state) ── */}
       <div data-section="real-grid">

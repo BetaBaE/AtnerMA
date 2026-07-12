@@ -56,16 +56,31 @@ const SECTIONS = [
 
 export default function ContactPage() {
   const [form, setForm] = useState({ nom: '', societe: '', telephone: '', email: '', objet: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState('idle');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: connect to backend / email service
-    setSubmitted(true);
+    if (status === 'sending') return;
+    setStatus('sending');
+    setErrorMsg('');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur inconnue');
+      setStatus('success');
+    } catch (err) {
+      setStatus('error');
+      setErrorMsg(err.message);
+    }
   };
 
   return (
@@ -331,7 +346,7 @@ export default function ContactPage() {
 
             {/* Form column */}
             <div className="contact-form">
-              {submitted ? (
+              {status === 'success' ? (
                 <div className="form-success">
                   <div className="success-hex">
                     <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
@@ -345,7 +360,8 @@ export default function ContactPage() {
                 <>
                   <div className="form-title">Formulaire de Contact</div>
                   <p className="form-sub">Tous les champs marqués d&apos;un astérisque sont obligatoires.</p>
-                  <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit}>
+                      <input type="text" name="website" value={form.website || ''} onChange={handleChange} style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0 }} tabIndex="-1" autoComplete="off" aria-hidden="true" />
                     <div className="form-row">
                       <div className="form-group">
                         <label className="form-label" htmlFor="nom">Nom &amp; Prénom <span>*</span></label>
@@ -433,9 +449,14 @@ export default function ContactPage() {
                       />
                     </div>
 
-                    <button type="submit" className="btn btn-primary form-submit">
-                      Envoyer le Message →
+                    <button type="submit" className="btn btn-primary form-submit" disabled={status === 'sending'} style={status === 'sending' ? { opacity: 0.6, cursor: 'wait' } : undefined}>
+                      {status === 'sending' ? 'Envoi en cours…' : 'Envoyer le Message →'}
                     </button>
+                    {status === 'error' && (
+                      <p style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: '#c0392b', textAlign: 'center' }}>
+                        {errorMsg}
+                      </p>
+                    )}
                   </form>
                 </>
               )}

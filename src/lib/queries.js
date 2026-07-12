@@ -65,7 +65,7 @@ export const GET_ALL_PROJECTS = gql`
 
 export const GET_FEATURED_PROJECTS = gql`
   query GetFeaturedProjects {
-    projectCollection(where: { featured: true }, limit: 3) {
+    projectCollection(where: { featured: true }, limit: 5) {
       items {
         sys {
           id
@@ -76,12 +76,22 @@ export const GET_FEATURED_PROJECTS = gql`
         region
         client
         year
+        typeDeProjet: projectType
         coverImage {
           url
           title
           width
           height
         }
+        gallery: galleryCollection(limit: 10) {
+          items {
+            url
+            title
+            width
+            height
+          }
+        }
+        specs { json }
         model {
           url
           contentType

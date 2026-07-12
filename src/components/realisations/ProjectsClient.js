@@ -58,7 +58,7 @@ export default function ProjectsClient({ projects }) {
   const [page, setPage]                   = useState(0);
 
   useEffect(() => {
-    fetch('/data/morocco.geojson').then(r => r.json()).then(setMoroccoGeo);
+    fetch('/data/MarocSengal.geojson').then(r => r.json()).then(setMoroccoGeo);
   }, []);
 
   const allTypes = [...new Set(projects.map(p => p.projectType).filter(Boolean))];

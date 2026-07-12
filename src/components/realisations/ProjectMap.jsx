@@ -28,7 +28,7 @@ export default function ProjectMap({ projects }) {
   const mapRef = useRef(null);
 
   useEffect(() => {
-    fetch('/data/morocco.geojson').then(r => r.json()).then(setMoroccoGeo);
+    fetch('/data/MarocSengal.geojson').then(r => r.json()).then(setMoroccoGeo);
   }, []);
 
 
@@ -133,7 +133,7 @@ export default function ProjectMap({ projects }) {
           <p style={{
             fontSize: '0.7rem', textTransform: 'uppercase',
             letterSpacing: '0.1em', color: '#00a3ff',
-            margin: '1.25rem 0 0.5rem',
+            margin: '1.25rem 0 0.5rem', 
           }}>
             Type de projet
           </p>
