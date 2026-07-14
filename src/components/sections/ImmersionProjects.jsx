@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import { ctfImage } from '@/lib/contentful-image';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
@@ -11,6 +11,18 @@ function petalImage(project) {
 
 export default function ImmersionProjects({ projects }) {
   const [active, setActive] = useState(0);
+  const stripRef = useRef(null);
+
+  // Force a committed reflow when `active` changes so the flex-basis
+  // transition has two distinct layout states to interpolate between.
+  useLayoutEffect(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    // Reading offsetHeight forces the browser to flush pending layout,
+    // committing the previous flex-basis values before the new ones apply.
+    // eslint-disable-next-line no-unused-expressions
+    strip.offsetHeight;
+  }, [active]);
 
   const items = (projects ?? []).slice(0, 5);
 
@@ -275,7 +287,7 @@ export default function ImmersionProjects({ projects }) {
         </div>
 
         {/* ── DESKTOP PETAL STRIP ── */}
-        <div className="immersion-strip">
+        <div className="immersion-strip" ref={stripRef}>
           {items.map((project, i) => {
             const isActive = i === active;
             const src = petalImage(project);
@@ -316,6 +328,7 @@ export default function ImmersionProjects({ projects }) {
             const isActive = i === active;
             const src = petalImage(project);
             const url = src ? ctfImage(src, { width: 1000 }) : null;
+            console.log('petal render', project.slug, isActive ? 'ACTIVE' : 'collapsed');
             return (
               <button
                 key={project.slug}

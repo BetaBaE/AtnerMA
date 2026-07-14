@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(curl -s -o /tmp/home.html -w \"http_code:%{http_code}\\\\n\" http://localhost:3003/)",
+      "Read(//tmp/**)"
+    ]
+  }
+}

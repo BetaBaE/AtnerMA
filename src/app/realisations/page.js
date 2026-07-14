@@ -33,7 +33,7 @@ export default async function RealisationsPage() {
     projectType: item.projectType ?? null,
   }));
 
-  const featured = projects.find((p) => p.featured) ?? null;
+  const featured = projects.find((p) => p.model) ?? null;
 
   const SECTIONS_BASE = [
     { id: 'real-hero', label: 'Intro' },

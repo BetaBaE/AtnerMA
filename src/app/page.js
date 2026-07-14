@@ -9,11 +9,12 @@ import ScrollReveal from '@/components/layout/ScrollReveal';
 import VideoHero from '@/components/home/VideoHero';
 import SectionScrollBar from '@/components/layout/SectionScrollBar';
 import ClientsMarqueeWrapper from '@/components/home/ClientsMarqueeWrapper';
+import ProjectSphere from '@/components/home/ProjectSphere';
 
 const SECTIONS = [
   { id: 'hero',         label: 'Accueil' },
   { id: 'stats',        label: 'Chiffres' },
-  { id: 'activites',    label: 'Activités' },
+  { id: 'domaines',     label: 'Domaines' },
   { id: 'realisations', label: 'Réalisations' },
   { id: 'clients',      label: 'Clients' },
   { id: 'contact',      label: 'Contact' },
@@ -270,7 +271,7 @@ export default async function HomePage() {
         />
       </div>
 
-      {/* ── ACTIVITÉS ── */}
+      {/* ── ACTIVITÉS ──
       <section className="section-surface" data-section="activites">
         <div className="container">
           <ScrollReveal>
@@ -296,6 +297,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      ── FIN ACTIVITÉS ── */}
+
+      <ProjectSphere />
 
       {/* ── RÉALISATIONS RÉCENTES ── */}
       <section className="section" data-section="realisations">
