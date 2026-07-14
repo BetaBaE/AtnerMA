@@ -312,7 +312,7 @@ export default async function HomePage() {
             </div>
           </ScrollReveal>
           <div className="proj-grid">
-            {recentProjects.map((p, i) => (
+            {recentProjects.slice(0, 3).map((p, i) => (
               <ScrollReveal key={p.slug} delay={i * 0.1} direction="up">
                 <Link href={`/realisations/${p.slug}`} className="proj-card">
                   <div className="proj-thumb" style={{ background: p.thumbBg }}>

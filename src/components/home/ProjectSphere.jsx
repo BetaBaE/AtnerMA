@@ -54,7 +54,7 @@ export default function ProjectSphere() {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (mq.matches || reduce.matches) return; // mobile / reduced-motion: no sphere animation
 
-    const radius = 340;
+    const radius = 290;
     const cardEls = Array.from(sphere.children);
 
     // Fibonacci sphere placement
@@ -110,7 +110,19 @@ export default function ProjectSphere() {
         .sphere-section {
           position: relative;
           height: 300vh;
-          background: #0a1628;
+          background: radial-gradient(ellipse 80% 60% at 60% 45%, #12294a 0%, #0a1628 55%, #060f1e 100%);
+        }
+        .sphere-scene::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 60%;
+          width: 700px;
+          height: 700px;
+          transform: translate(-50%, -50%);
+          background: radial-gradient(circle, rgba(0,102,204,0.12) 0%, rgba(0,163,255,0.05) 40%, transparent 70%);
+          pointer-events: none;
+          z-index: 0;
         }
         .sphere-scene {
           position: relative;
@@ -146,9 +158,11 @@ export default function ProjectSphere() {
           margin-top: 0.4rem;
         }
         .sphere {
+          margin-top : 30px;
           position: relative;
           width: 0;
           height: 0;
+          margin-top: 3rem;
           transform-style: preserve-3d;
         }
         .sphere-card {
@@ -175,25 +189,38 @@ export default function ProjectSphere() {
           left: 8%;
           top: 50%;
           transform: translateY(-50%);
-          max-width: 340px;
+          max-width: 360px;
           z-index: 6;
           transition: opacity 0.25s ease;
         }
         .sphere-text.fading { opacity: 0; }
         .sphere-text h3 {
           font-family: 'Barlow Condensed', sans-serif;
-          font-size: 2.2rem;
+          font-size: 2.4rem;
           font-weight: 700;
           text-transform: uppercase;
           color: #ffffff;
           line-height: 1.1;
-          margin-bottom: 1rem;
-          text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+          margin-bottom: 1.1rem;
+          padding-top: 1rem;
+          position: relative;
+          text-shadow: 0 4px 24px rgba(0,0,0,0.7), 0 0 40px rgba(0,163,255,0.15);
+        }
+        .sphere-text h3::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 48px;
+          height: 3px;
+          background: linear-gradient(90deg, #00a3ff, #0066cc);
         }
         .sphere-text p {
           font-size: 0.95rem;
           color: rgba(255,255,255,0.7);
           line-height: 1.7;
+          border-left: 2px solid rgba(0,163,255,0.25);
+          padding-left: 1rem;
         }
         /* FALLBACK (mobile + reduced-motion): alternating image/text rows */
         .sphere-mobile-list { display: none; }
