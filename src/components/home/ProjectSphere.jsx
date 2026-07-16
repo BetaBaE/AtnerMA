@@ -25,6 +25,7 @@ const IMAGES = [
   '/sphere/DJI_0012-scaled.jpg',
   '/sphere/DevDurable-scaled.jpg',
   '/sphere/Efficience-2-1.jpg',
+  '/sphere/1-6-scaled.jpg'
 ];
 
 const CHAPTERS = [
